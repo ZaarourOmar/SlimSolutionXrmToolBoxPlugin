@@ -129,6 +129,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="SQCPlugin.cs" />
     <Compile Include="SQCControl.cs">
       <SubType>UserControl</SubType>
@@ -148,6 +153,10 @@
     <Folder Include="Resources\Images\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="SQCControl.resx">
       <DependentUpon>SQCControl.cs</DependentUpon>
     </EmbeddedResource>

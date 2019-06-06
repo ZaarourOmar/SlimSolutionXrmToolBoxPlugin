@@ -28,11 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SQCControl));
             this.toolStripMenu = new System.Windows.Forms.ToolStrip();
             this.tsbClose = new System.Windows.Forms.ToolStripButton();
             this.tssSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbSample = new System.Windows.Forms.ToolStripButton();
+            this.btnLoadSolutions = new System.Windows.Forms.ToolStripButton();
+            this.btnCheckSolution = new System.Windows.Forms.ToolStripButton();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.btnSaveReport = new System.Windows.Forms.ToolStripButton();
             this.toolStripMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripMenu
@@ -41,19 +50,22 @@
             this.toolStripMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbClose,
             this.tssSeparator1,
-            this.tsbSample});
+            this.btnLoadSolutions,
+            this.btnCheckSolution,
+            this.tsbSample,
+            this.btnSaveReport});
             this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMenu.Name = "toolStripMenu";
             this.toolStripMenu.Size = new System.Drawing.Size(981, 25);
             this.toolStripMenu.TabIndex = 4;
-            this.toolStripMenu.Text = "toolStrip1";
+            this.toolStripMenu.Text = "Load Solutions";
             // 
             // tsbClose
             // 
             this.tsbClose.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tsbClose.Name = "tsbClose";
-            this.tsbClose.Size = new System.Drawing.Size(86, 22);
-            this.tsbClose.Text = "Close this tool";
+            this.tsbClose.Size = new System.Drawing.Size(40, 22);
+            this.tsbClose.Text = "Close";
             this.tsbClose.Click += new System.EventHandler(this.tsbClose_Click);
             // 
             // tssSeparator1
@@ -69,16 +81,70 @@
             this.tsbSample.Text = "Try me";
             this.tsbSample.Click += new System.EventHandler(this.tsbSample_Click);
             // 
+            // btnLoadSolutions
+            // 
+            this.btnLoadSolutions.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnLoadSolutions.Image = ((System.Drawing.Image)(resources.GetObject("btnLoadSolutions.Image")));
+            this.btnLoadSolutions.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnLoadSolutions.Name = "btnLoadSolutions";
+            this.btnLoadSolutions.Size = new System.Drawing.Size(89, 22);
+            this.btnLoadSolutions.Text = "Load Solutions";
+            // 
+            // btnCheckSolution
+            // 
+            this.btnCheckSolution.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnCheckSolution.Image = ((System.Drawing.Image)(resources.GetObject("btnCheckSolution.Image")));
+            this.btnCheckSolution.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCheckSolution.Name = "btnCheckSolution";
+            this.btnCheckSolution.Size = new System.Drawing.Size(91, 22);
+            this.btnCheckSolution.Text = "Check Solution";
+            // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.listBox1);
+            this.splitContainer1.Size = new System.Drawing.Size(981, 516);
+            this.splitContainer1.SplitterDistance = 196;
+            this.splitContainer1.TabIndex = 5;
+            // 
+            // listBox1
+            // 
+            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(0, 0);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(196, 516);
+            this.listBox1.TabIndex = 0;
+            // 
+            // btnSaveReport
+            // 
+            this.btnSaveReport.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnSaveReport.Image = ((System.Drawing.Image)(resources.GetObject("btnSaveReport.Image")));
+            this.btnSaveReport.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSaveReport.Name = "btnSaveReport";
+            this.btnSaveReport.Size = new System.Drawing.Size(73, 22);
+            this.btnSaveReport.Text = "Save Report";
+            this.btnSaveReport.ToolTipText = "Save Report";
+            // 
             // SQCControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStripMenu);
             this.Name = "SQCControl";
             this.Size = new System.Drawing.Size(981, 541);
             this.Load += new System.EventHandler(this.SQCControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -89,5 +155,10 @@
         private System.Windows.Forms.ToolStripButton tsbClose;
         private System.Windows.Forms.ToolStripButton tsbSample;
         private System.Windows.Forms.ToolStripSeparator tssSeparator1;
+        private System.Windows.Forms.ToolStripButton btnLoadSolutions;
+        private System.Windows.Forms.ToolStripButton btnCheckSolution;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ToolStripButton btnSaveReport;
     }
 }
