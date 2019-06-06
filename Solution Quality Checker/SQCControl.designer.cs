@@ -36,7 +36,7 @@
             this.btnLoadSolutions = new System.Windows.Forms.ToolStripButton();
             this.btnCheckSolution = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.lstSolutions = new System.Windows.Forms.ListBox();
             this.btnSaveReport = new System.Windows.Forms.ToolStripButton();
             this.toolStripMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -89,15 +89,18 @@
             this.btnLoadSolutions.Name = "btnLoadSolutions";
             this.btnLoadSolutions.Size = new System.Drawing.Size(89, 22);
             this.btnLoadSolutions.Text = "Load Solutions";
+            this.btnLoadSolutions.Click += new System.EventHandler(this.btnLoadSolutions_Click);
             // 
             // btnCheckSolution
             // 
             this.btnCheckSolution.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnCheckSolution.Enabled = false;
             this.btnCheckSolution.Image = ((System.Drawing.Image)(resources.GetObject("btnCheckSolution.Image")));
             this.btnCheckSolution.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCheckSolution.Name = "btnCheckSolution";
             this.btnCheckSolution.Size = new System.Drawing.Size(91, 22);
             this.btnCheckSolution.Text = "Check Solution";
+            this.btnCheckSolution.Visible = false;
             // 
             // splitContainer1
             // 
@@ -107,19 +110,20 @@
             // 
             // splitContainer1.Panel1
             // 
-            this.splitContainer1.Panel1.Controls.Add(this.listBox1);
+            this.splitContainer1.Panel1.Controls.Add(this.lstSolutions);
             this.splitContainer1.Size = new System.Drawing.Size(981, 516);
             this.splitContainer1.SplitterDistance = 196;
             this.splitContainer1.TabIndex = 5;
             // 
-            // listBox1
+            // lstSolutions
             // 
-            this.listBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listBox1.FormattingEnabled = true;
-            this.listBox1.Location = new System.Drawing.Point(0, 0);
-            this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(196, 516);
-            this.listBox1.TabIndex = 0;
+            this.lstSolutions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstSolutions.FormattingEnabled = true;
+            this.lstSolutions.Location = new System.Drawing.Point(0, 0);
+            this.lstSolutions.Name = "lstSolutions";
+            this.lstSolutions.Size = new System.Drawing.Size(196, 516);
+            this.lstSolutions.TabIndex = 0;
+            this.lstSolutions.SelectedIndexChanged += new System.EventHandler(this.lstSolutions_SelectedIndexChanged);
             // 
             // btnSaveReport
             // 
@@ -158,7 +162,7 @@
         private System.Windows.Forms.ToolStripButton btnLoadSolutions;
         private System.Windows.Forms.ToolStripButton btnCheckSolution;
         private System.Windows.Forms.SplitContainer splitContainer1;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.ListBox lstSolutions;
         private System.Windows.Forms.ToolStripButton btnSaveReport;
     }
 }

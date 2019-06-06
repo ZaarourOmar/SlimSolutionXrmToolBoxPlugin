@@ -11,6 +11,7 @@ using XrmToolBox.Extensibility;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 using McTools.Xrm.Connection;
+using System.Windows.Controls;
 
 namespace Solution_Quality_Checker
 {
@@ -25,7 +26,7 @@ namespace Solution_Quality_Checker
 
         private void SQCControl_Load(object sender, EventArgs e)
         {
-            ShowInfoNotification("This is a notification that can lead to XrmToolBox repository", new Uri("https://github.com/MscrmTools/XrmToolBox"));
+            //ShowInfoNotification("This is a notification that can lead to XrmToolBox repository", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 
             // Loads or creates the settings for the plugin
             if (!SettingsManager.Instance.TryLoad(GetType(), out mySettings))
@@ -101,6 +102,54 @@ namespace Solution_Quality_Checker
             {
                 mySettings.LastUsedOrganizationWebappUrl = detail.WebApplicationUrl;
                 LogInfo("Connection has changed to: {0}", detail.WebApplicationUrl);
+            }
+        }
+
+        private void btnLoadSolutions_Click(object sender, EventArgs e)
+        {
+            QueryExpression solutionsQuery = new QueryExpression("solution");
+            solutionsQuery.ColumnSet = new ColumnSet(true);
+            solutionsQuery.Criteria.AddCondition("ismanaged",ConditionOperator.Equal,false);
+
+            WorkAsync(new WorkAsyncInfo
+            {
+                Message = "Getting all unmanaged solutions",
+           
+                Work = (worker, args) =>
+                {
+                    args.Result = Service.RetrieveMultiple(solutionsQuery);
+                },
+                PostWorkCallBack = (args) =>
+                {
+                    if (args.Error != null)
+                    {
+                        MessageBox.Show(args.Error.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    var result = args.Result as EntityCollection;
+                    if (result != null)
+                    {
+                       foreach(Entity solution in result.Entities)
+                        {
+                            lstSolutions.Items.Add(solution["friendlyname"]);
+                        }
+                        //MessageBox.Show($"Found {result.Entities.Count} accounts");
+                    }
+                }
+            });
+        }
+
+        private void lstSolutions_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var listItem = lstSolutions.SelectedItem;
+            if(listItem != null)
+            {
+                btnCheckSolution.Visible = true;
+                btnCheckSolution.Enabled = true;
+            }
+            else
+            {
+                btnCheckSolution.Visible = false;
+                btnCheckSolution.Enabled = false;
             }
         }
     }
