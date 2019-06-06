@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Solution_Quality_Checker
 {
-    class SolutionChecker
+    public class SolutionChecker
     {
     }
 }

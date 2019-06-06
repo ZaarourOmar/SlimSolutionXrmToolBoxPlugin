@@ -1,6 +1,6 @@
 ﻿namespace Solution_Quality_Checker
 {
-    partial class MyPluginControl
+    partial class SQCControl
     {
         /// <summary> 
         /// Variable nécessaire au concepteur.
@@ -69,14 +69,14 @@
             this.tsbSample.Text = "Try me";
             this.tsbSample.Click += new System.EventHandler(this.tsbSample_Click);
             // 
-            // MyPluginControl
+            // SQCControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.toolStripMenu);
-            this.Name = "MyPluginControl";
+            this.Name = "SQCControl";
             this.Size = new System.Drawing.Size(981, 541);
-            this.Load += new System.EventHandler(this.MyPluginControl_Load);
+            this.Load += new System.EventHandler(this.SQCControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
             this.ResumeLayout(false);

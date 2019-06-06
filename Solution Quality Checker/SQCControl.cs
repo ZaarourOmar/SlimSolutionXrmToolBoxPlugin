@@ -14,16 +14,16 @@ using McTools.Xrm.Connection;
 
 namespace Solution_Quality_Checker
 {
-    public partial class MyPluginControl : PluginControlBase
+    public partial class SQCControl : PluginControlBase
     {
         private Settings mySettings;
 
-        public MyPluginControl()
+        public SQCControl()
         {
             InitializeComponent();
         }
 
-        private void MyPluginControl_Load(object sender, EventArgs e)
+        private void SQCControl_Load(object sender, EventArgs e)
         {
             ShowInfoNotification("This is a notification that can lead to XrmToolBox repository", new Uri("https://github.com/MscrmTools/XrmToolBox"));
 
@@ -84,7 +84,7 @@ namespace Solution_Quality_Checker
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MyPluginControl_OnCloseTool(object sender, EventArgs e)
+        private void SQCControl_OnCloseTool(object sender, EventArgs e)
         {
             // Before leaving, save the settings
             SettingsManager.Instance.Save(GetType(), mySettings);
