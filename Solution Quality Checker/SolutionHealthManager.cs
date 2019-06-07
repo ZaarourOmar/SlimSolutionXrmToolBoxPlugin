@@ -14,7 +14,6 @@ namespace Solution_Quality_Checker
 
         public event EventHandler<PartialResultsEventArgs> OnPartialResultsDone;
 
-
         public IOrganizationService CRMService { get; internal set; }
         public ValidationResults HealthIssues { get; set; }
         public ValidationSettings CurrentValidationSettings { get { return ValidationSettings.CurrentValidationSettings; } }
@@ -27,7 +26,7 @@ namespace Solution_Quality_Checker
             Validators = Validator.GetValidators(CRMService, CurrentValidationSettings);
         }
 
-        public async Task<ValidationResults> Validate(CRMSolution solution)
+        public  ValidationResults Validate(CRMSolution solution)
         {
             ValidationResults finalResults = new ValidationResults();
 
@@ -37,8 +36,8 @@ namespace Solution_Quality_Checker
             }
             foreach(IValidator validator in Validators)
             {
-                ValidationResults results = await validator.Validate(solution);
-                OnPartialResultsDone?.Invoke(this,new PartialResultsEventArgs(results));
+                OnPartialResultsDone?.Invoke(this, new PartialResultsEventArgs(validator.Message));
+                ValidationResults results =  validator.Validate(solution);
                 finalResults.AddResultSet(results);
             }
 
@@ -49,11 +48,10 @@ namespace Solution_Quality_Checker
 
     public class PartialResultsEventArgs
     {
-        private ValidationResults PartialResults;
-
-        public PartialResultsEventArgs(ValidationResults results)
+        public string Message { get; set; }
+        public PartialResultsEventArgs(string message)
         {
-            this.PartialResults = results;
+            this.Message = message;
         }
     }
 }

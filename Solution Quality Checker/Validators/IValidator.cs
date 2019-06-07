@@ -7,6 +7,7 @@ namespace Solution_Quality_Checker.Validators
     public interface IValidator
     {
         IOrganizationService CRMService { get; set; }
-        Task<ValidationResults> Validate(CRMSolution solution);
+        string Message { get; }
+        ValidationResults Validate(CRMSolution solution);
     }
 }

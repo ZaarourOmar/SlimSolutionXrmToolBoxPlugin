@@ -34,9 +34,9 @@
             this.tssSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnLoadSolutions = new System.Windows.Forms.ToolStripButton();
             this.btnCheckSolution = new System.Windows.Forms.ToolStripButton();
+            this.btnSettings = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lstSolutions = new System.Windows.Forms.ListBox();
-            this.btnSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -54,7 +54,7 @@
             this.btnSettings});
             this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMenu.Name = "toolStripMenu";
-            this.toolStripMenu.Size = new System.Drawing.Size(1308, 27);
+            this.toolStripMenu.Size = new System.Drawing.Size(981, 25);
             this.toolStripMenu.TabIndex = 4;
             this.toolStripMenu.Text = "Load Solutions";
             // 
@@ -62,14 +62,14 @@
             // 
             this.tsbClose.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.tsbClose.Name = "tsbClose";
-            this.tsbClose.Size = new System.Drawing.Size(49, 24);
+            this.tsbClose.Size = new System.Drawing.Size(40, 22);
             this.tsbClose.Text = "Close";
             this.tsbClose.Click += new System.EventHandler(this.tsbClose_Click);
             // 
             // tssSeparator1
             // 
             this.tssSeparator1.Name = "tssSeparator1";
-            this.tssSeparator1.Size = new System.Drawing.Size(6, 27);
+            this.tssSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // btnLoadSolutions
             // 
@@ -77,7 +77,7 @@
             this.btnLoadSolutions.Image = ((System.Drawing.Image)(resources.GetObject("btnLoadSolutions.Image")));
             this.btnLoadSolutions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLoadSolutions.Name = "btnLoadSolutions";
-            this.btnLoadSolutions.Size = new System.Drawing.Size(111, 24);
+            this.btnLoadSolutions.Size = new System.Drawing.Size(89, 22);
             this.btnLoadSolutions.Text = "Load Solutions";
             this.btnLoadSolutions.Click += new System.EventHandler(this.btnLoadSolutions_Click);
             // 
@@ -88,35 +88,9 @@
             this.btnCheckSolution.Image = ((System.Drawing.Image)(resources.GetObject("btnCheckSolution.Image")));
             this.btnCheckSolution.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnCheckSolution.Name = "btnCheckSolution";
-            this.btnCheckSolution.Size = new System.Drawing.Size(111, 24);
+            this.btnCheckSolution.Size = new System.Drawing.Size(91, 22);
             this.btnCheckSolution.Text = "Check Solution";
-            // 
-            // splitContainer1
-            // 
-            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 27);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
-            this.splitContainer1.Name = "splitContainer1";
-            // 
-            // splitContainer1.Panel1
-            // 
-            this.splitContainer1.Panel1.Controls.Add(this.lstSolutions);
-            this.splitContainer1.Size = new System.Drawing.Size(1308, 639);
-            this.splitContainer1.SplitterDistance = 261;
-            this.splitContainer1.SplitterWidth = 5;
-            this.splitContainer1.TabIndex = 5;
-            // 
-            // lstSolutions
-            // 
-            this.lstSolutions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lstSolutions.FormattingEnabled = true;
-            this.lstSolutions.ItemHeight = 16;
-            this.lstSolutions.Location = new System.Drawing.Point(0, 0);
-            this.lstSolutions.Margin = new System.Windows.Forms.Padding(4);
-            this.lstSolutions.Name = "lstSolutions";
-            this.lstSolutions.Size = new System.Drawing.Size(261, 639);
-            this.lstSolutions.TabIndex = 0;
-            this.lstSolutions.SelectedIndexChanged += new System.EventHandler(this.lstSolutions_SelectedIndexChanged);
+            this.btnCheckSolution.Click += new System.EventHandler(this.btnCheckSolution_Click);
             // 
             // btnSettings
             // 
@@ -125,19 +99,42 @@
             this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
             this.btnSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSettings.Name = "btnSettings";
-            this.btnSettings.Size = new System.Drawing.Size(120, 24);
+            this.btnSettings.Size = new System.Drawing.Size(97, 22);
             this.btnSettings.Text = "Change Settings";
             this.btnSettings.Click += new System.EventHandler(this.BtnSettings_Click);
             // 
+            // splitContainer1
+            // 
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(0, 25);
+            this.splitContainer1.Name = "splitContainer1";
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.lstSolutions);
+            this.splitContainer1.Size = new System.Drawing.Size(981, 516);
+            this.splitContainer1.SplitterDistance = 195;
+            this.splitContainer1.TabIndex = 5;
+            // 
+            // lstSolutions
+            // 
+            this.lstSolutions.DisplayMember = "Content";
+            this.lstSolutions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lstSolutions.FormattingEnabled = true;
+            this.lstSolutions.Location = new System.Drawing.Point(0, 0);
+            this.lstSolutions.Name = "lstSolutions";
+            this.lstSolutions.Size = new System.Drawing.Size(195, 516);
+            this.lstSolutions.TabIndex = 0;
+            this.lstSolutions.SelectedIndexChanged += new System.EventHandler(this.lstSolutions_SelectedIndexChanged);
+            // 
             // SQCControl
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStripMenu);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SQCControl";
-            this.Size = new System.Drawing.Size(1308, 666);
+            this.Size = new System.Drawing.Size(981, 541);
             this.Load += new System.EventHandler(this.SQCControl_Load);
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();

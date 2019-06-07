@@ -14,7 +14,6 @@ namespace Solution_Quality_Checker.Models
             Results = new List<ValidationResult>();
         }
 
-        public string Label { get; set; }
         public Guid Id { get; set; }
         public List<ValidationResult> Results { get; set; }
 

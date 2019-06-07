@@ -11,20 +11,22 @@ namespace Solution_Quality_Checker.Validators
     public abstract class Validator : IValidator
     {
         public IOrganizationService CRMService { get; set; }
+        public abstract string Message { get; }
+
         public Validator(IOrganizationService service)
         {
             CRMService = service;
         }
-        public abstract Task<ValidationResults> Validate(CRMSolution solution);
+        public abstract ValidationResults Validate(CRMSolution solution);
 
         public static List<IValidator> GetValidators(IOrganizationService service, ValidationSettings currentValidationSettings)
         {
             List<IValidator> validators = new List<IValidator>();
-            if (currentValidationSettings.SettingsKVPs["CheckComponents"])
+            if (currentValidationSettings.SettingsKVPs["CheckEntityComponents"])
             {
                 validators.Add(new ComponentsValidator(service));
             }
-            if (currentValidationSettings.SettingsKVPs["CheckPRocesses"])
+            if (currentValidationSettings.SettingsKVPs["CheckProcesses"])
             {
                 validators.Add(new ProcessValidator(service));
             }

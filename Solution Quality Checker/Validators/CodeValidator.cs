@@ -14,13 +14,12 @@ namespace Solution_Quality_Checker.Validators
         {
         }
 
-        public override async Task<ValidationResults> Validate(CRMSolution solution)
+        public override string Message => "Checking Code";
+
+        public override ValidationResults Validate(CRMSolution solution)
         {
             ValidationResults results = new ValidationResults();
-            return await Task.Factory.StartNew(() =>
-            {
-                return results;
-            });
+            return results;
         }
     }
 }

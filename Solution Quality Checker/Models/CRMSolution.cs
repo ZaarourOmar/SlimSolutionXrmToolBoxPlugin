@@ -1,4 +1,5 @@
 ﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Organization;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,14 @@ namespace Solution_Quality_Checker.Models
 {
     public class CRMSolution
     {
-        public Solution BaseSolution { get; set; }
+        public Entity BaseSolutionRecord { get; set; }
         public ExportSolutionResponse UnManagedSolutionData { get; set; }
         public ExportSolutionResponse ManagedSolutionData { get; set; }
-        public CRMSolution(Solution solution)
+        public string Name { get { return BaseSolutionRecord.GetAttributeValue<string>("uniquename"); } }
+
+        public CRMSolution(Entity solutionRecord)
         {
-            this.BaseSolution = solution;
+            this.BaseSolutionRecord = solutionRecord;
         }
     }
 }
