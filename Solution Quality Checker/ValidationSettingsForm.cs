@@ -19,7 +19,7 @@ namespace Solution_Quality_Checker
         {
             InitializeComponent();
             AppSettings = mySettings;
-           // MapSettingsToCheckboxes();
+            MapSettingsToCheckboxes();
         }
 
 
@@ -31,38 +31,10 @@ namespace Solution_Quality_Checker
 
         private void MapCheckboxesToSettings()
         {
-            AppSettings.CurrentValidationSettings.Clear();
-
-            foreach (var item in lstSettings.CheckedItems)
-            {
-                switch (item.ToString())
-                {
-                    case "Extra Components":
-                        AppSettings.CurrentValidationSettings.CheckExtraComponents = true;
-                        break;
-                    case "Processes":
-                        AppSettings.CurrentValidationSettings.CheckProcesses = true;
-                        break;
-                    case "Business Rules":
-                        AppSettings.CurrentValidationSettings.CheckBusinessRules = true;
-                        break;
-                    case "BPF":
-                        AppSettings.CurrentValidationSettings.CheckBPF = true;
-                        break;
-                    case "Dependencies":
-                        AppSettings.CurrentValidationSettings.CheckDependencies = true;
-                        break;
-                    case "Modularity":
-                        AppSettings.CurrentValidationSettings.CheckModularity = true;
-                        break;
-                    case "Web Resources":
-                        AppSettings.CurrentValidationSettings.CheckWebResources = true;
-                        break;
-                    case "Publishers":
-                        AppSettings.CurrentValidationSettings.CheckPublishers = true;
-                        break;
-                }
-            }
+            AppSettings.CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"] = lstSettings.GetItemChecked(0);
+            AppSettings.CurrentValidationSettings.SettingsKVPs["CheckProcesses"] = lstSettings.GetItemChecked(1);
+            AppSettings.CurrentValidationSettings.SettingsKVPs["CheckPublishers"] = lstSettings.GetItemChecked(2);
+            AppSettings.CurrentValidationSettings.SettingsKVPs["CheckCode"] = lstSettings.GetItemChecked(3);
         }
 
         private void MapSettingsToCheckboxes()
@@ -71,42 +43,27 @@ namespace Solution_Quality_Checker
             for (int i = 0; i < lstSettings.Items.Count; i++)
                 lstSettings.SetItemChecked(i, true);
 
-            if (!AppSettings.CurrentValidationSettings.CheckExtraComponents)
+            if (!AppSettings.CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"])
             {
                 lstSettings.SetItemChecked(0, false);
             }
-            if (!AppSettings.CurrentValidationSettings.CheckProcesses)
+            if (!AppSettings.CurrentValidationSettings.SettingsKVPs["CheckProcesses"])
             {
                 lstSettings.SetItemChecked(1, false);
             }
-            if (!AppSettings.CurrentValidationSettings.CheckBusinessRules)
+            if (!AppSettings.CurrentValidationSettings.SettingsKVPs["CheckPublishers"])
             {
                 lstSettings.SetItemChecked(2, false);
             }
-            if (!AppSettings.CurrentValidationSettings.CheckDependencies)
+            if (!AppSettings.CurrentValidationSettings.SettingsKVPs["CheckCode"])
             {
                 lstSettings.SetItemChecked(3, false);
             }
-            if (!AppSettings.CurrentValidationSettings.CheckPublishers)
-            {
-                lstSettings.SetItemChecked(4, false);
-            }
-            if (!AppSettings.CurrentValidationSettings.CheckWebResources)
-            {
-                lstSettings.SetItemChecked(5, false);
-            }
-            if (!AppSettings.CurrentValidationSettings.CheckModularity)
-            {
-                lstSettings.SetItemChecked(6, false);
-            }
-            if (!AppSettings.CurrentValidationSettings.CheckBPF)
-            {
-                lstSettings.SetItemChecked(7, false);
-            }
+
         }
         private void BtnSaveSettings_Click(object sender, EventArgs e)
         {
-           // MapCheckboxesToSettings();
+            MapCheckboxesToSettings();
             this.Close();
         }
     }

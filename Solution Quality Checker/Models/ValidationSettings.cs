@@ -8,11 +8,30 @@ namespace Solution_Quality_Checker.Models
 {
     public class ValidationSettings
     {
+        Dictionary<string, bool> _settingsKVPs;
+        public Dictionary<string, bool> SettingsKVPs { get => _settingsKVPs; set => _settingsKVPs = value; }
+
         public ValidationSettings(bool checkAll)
         {
             CheckAll = checkAll;
+            SettingsKVPs = new Dictionary<string, bool>();
+            if(CheckAll)
+            {
+                SettingsKVPs.Add("CheckProcesses", true);
+                SettingsKVPs.Add("CheckCode", true);
+                SettingsKVPs.Add("CheckPublishers", true);
+                SettingsKVPs.Add("CheckEntityComponents", true);
+            }
+            else
+            {
+                SettingsKVPs.Add("CheckProcesses", true);
+                SettingsKVPs.Add("CheckCode", false);
+                SettingsKVPs.Add("CheckPublishers", false);
+                SettingsKVPs.Add("CheckEntityComponents", true);
+            }
         }
 
+      
         public static ValidationSettings Default
         {
             get
@@ -20,26 +39,7 @@ namespace Solution_Quality_Checker.Models
                 return new ValidationSettings(true);
             }
         }
-
-        public bool CheckAll
-        {
-            get { return CheckProcesses && CheckBusinessRules && CheckExtraComponents && CheckModularity && CheckBPF && CheckWebResources && CheckDependencies && CheckPublishers; }
-            internal set { CheckAll = value; }
-        }
-
-        public bool CheckProcesses { get; set; }
-        public bool CheckBusinessRules { get; set; }
-
-        public void Clear()
-        {
-            CheckBPF = false;
-        }
-
-        public bool CheckModularity { get; set; }
-        public bool CheckBPF { get; set; }
-        public bool CheckWebResources { get; set; }
-        public bool CheckPublishers { get; set; }
-        public bool CheckDependencies { get; set; }
-        public bool CheckExtraComponents { get; internal set; }
+        public bool CheckAll { get; set; }
+      
     }
 }

@@ -155,7 +155,7 @@ namespace Solution_Quality_Checker
 
         private void BtnSettings_Click(object sender, EventArgs e)
         {
-            ValidationSettingsForm settingsForm = new ValidationSettingsForm(mySettings);
+           ValidationSettingsForm settingsForm = new ValidationSettingsForm(mySettings);
             settingsForm.Text = "Quality Settings";
             settingsForm.ShowDialog();
         }

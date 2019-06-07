@@ -35,9 +35,10 @@
             // 
             // btnSaveSettings
             // 
-            this.btnSaveSettings.Location = new System.Drawing.Point(256, 225);
+            this.btnSaveSettings.Location = new System.Drawing.Point(192, 183);
+            this.btnSaveSettings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.btnSaveSettings.Name = "btnSaveSettings";
-            this.btnSaveSettings.Size = new System.Drawing.Size(100, 34);
+            this.btnSaveSettings.Size = new System.Drawing.Size(75, 28);
             this.btnSaveSettings.TabIndex = 6;
             this.btnSaveSettings.Text = "Save";
             this.btnSaveSettings.UseVisualStyleBackColor = true;
@@ -49,8 +50,9 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Top;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(150, 20);
+            this.label1.Size = new System.Drawing.Size(126, 17);
             this.label1.TabIndex = 5;
             this.label1.Text = "Select your criteria";
             // 
@@ -58,28 +60,26 @@
             // 
             this.lstSettings.FormattingEnabled = true;
             this.lstSettings.Items.AddRange(new object[] {
-            "Extra Components",
+            "Entity Components",
             "Processes",
-            "Business Rules",
-            "Dependencies",
             "Publishers",
-            "Web Resources",
-            "Modularity",
-            "BPF"});
-            this.lstSettings.Location = new System.Drawing.Point(4, 23);
+            "Code"});
+            this.lstSettings.Location = new System.Drawing.Point(3, 19);
+            this.lstSettings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.lstSettings.Name = "lstSettings";
-            this.lstSettings.Size = new System.Drawing.Size(353, 191);
+            this.lstSettings.Size = new System.Drawing.Size(266, 154);
             this.lstSettings.TabIndex = 4;
             this.lstSettings.SelectedIndexChanged += new System.EventHandler(this.CheckedListBox1_SelectedIndexChanged);
             // 
             // ValidationSettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(370, 265);
+            this.ClientSize = new System.Drawing.Size(278, 215);
             this.Controls.Add(this.btnSaveSettings);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lstSettings);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "ValidationSettingsForm";
             this.Text = "Validation Settings Form";
             this.ResumeLayout(false);
