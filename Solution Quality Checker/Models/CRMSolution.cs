@@ -16,6 +16,8 @@ namespace Solution_Quality_Checker.Models
         public ExportSolutionResponse ManagedSolutionData { get; set; }
         public string Name { get { return BaseSolutionRecord.GetAttributeValue<string>("uniquename"); } }
 
+        public Guid Id { get { return BaseSolutionRecord.Id; } }
+
         public CRMSolution(Entity solutionRecord)
         {
             this.BaseSolutionRecord = solutionRecord;

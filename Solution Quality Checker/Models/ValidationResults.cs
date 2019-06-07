@@ -11,15 +11,28 @@ namespace Solution_Quality_Checker.Models
         public ValidationResults()
         {
             Id = Guid.NewGuid();
-            Results = new List<ValidationResult>();
+            ResultRecords = new List<ValidationResult>();
+        }
+
+        public ValidationResult this[int index]    // Indexer declaration  
+        {
+            get
+            {
+                return ResultRecords[index];
+            }
         }
 
         public Guid Id { get; set; }
-        public List<ValidationResult> Results { get; set; }
+        public List<ValidationResult> ResultRecords { get; set; }
 
         public void AddResultSet(ValidationResults partialResults)
         {
-            Results.AddRange(partialResults.Results);
+            ResultRecords.AddRange(partialResults.ResultRecords);
+        }
+
+        internal void AddResult(ValidationResult singleResult)
+        {
+            ResultRecords.Add(singleResult);
         }
     }
 }

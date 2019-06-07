@@ -155,7 +155,7 @@ namespace Solution_Quality_Checker
                     {
                         healthManager.OnPartialResultsDone += (source, progressArgs) =>
                         {
-                            worker.ReportProgress(0,  progressArgs.Message);
+                            worker.ReportProgress(0, progressArgs.Message);
                         };
                         finalResults = healthManager.Validate(crmSolution);
                     },
@@ -167,7 +167,10 @@ namespace Solution_Quality_Checker
                         }
 
                         // bind the finalResults here
-                        MessageBox.Show("Results are ready now!");
+                        foreach (Models.ValidationResult vr in finalResults.ResultRecords)
+                        {
+                            gvResults.Rows.Add(vr.Type, vr.Description, vr.Suggestions, vr.PriorityLevel);
+                        }
                     },
                     ProgressChanged = (progressArgs) =>
                     {

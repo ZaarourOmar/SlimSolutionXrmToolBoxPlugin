@@ -37,10 +37,17 @@
             this.btnSettings = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lstSolutions = new System.Windows.Forms.ListBox();
+            this.gvResults = new System.Windows.Forms.DataGridView();
+            this.Level = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Suggestions = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStripMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gvResults)).BeginInit();
             this.SuspendLayout();
             // 
             // toolStripMenu
@@ -112,6 +119,10 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.Controls.Add(this.lstSolutions);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.gvResults);
             this.splitContainer1.Size = new System.Drawing.Size(981, 516);
             this.splitContainer1.SplitterDistance = 195;
             this.splitContainer1.TabIndex = 5;
@@ -127,6 +138,50 @@
             this.lstSolutions.TabIndex = 0;
             this.lstSolutions.SelectedIndexChanged += new System.EventHandler(this.lstSolutions_SelectedIndexChanged);
             // 
+            // gvResults
+            // 
+            this.gvResults.AllowUserToAddRows = false;
+            this.gvResults.AllowUserToDeleteRows = false;
+            this.gvResults.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.gvResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.gvResults.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Type,
+            this.Description,
+            this.Suggestions,
+            this.Level});
+            this.gvResults.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gvResults.Location = new System.Drawing.Point(0, 0);
+            this.gvResults.Name = "gvResults";
+            this.gvResults.ReadOnly = true;
+            this.gvResults.Size = new System.Drawing.Size(782, 516);
+            this.gvResults.TabIndex = 1;
+            // 
+            // Level
+            // 
+            this.Level.HeaderText = "Level";
+            this.Level.Name = "Level";
+            this.Level.ReadOnly = true;
+            // 
+            // Suggestions
+            // 
+            this.Suggestions.HeaderText = "Suggestions";
+            this.Suggestions.Name = "Suggestions";
+            this.Suggestions.ReadOnly = true;
+            // 
+            // Description
+            // 
+            this.Description.HeaderText = "Description";
+            this.Description.Name = "Description";
+            this.Description.ReadOnly = true;
+            // 
+            // Type
+            // 
+            this.Type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.Type.HeaderText = "Regarding";
+            this.Type.Name = "Type";
+            this.Type.ReadOnly = true;
+            this.Type.Width = 79;
+            // 
             // SQCControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -139,8 +194,10 @@
             this.toolStripMenu.ResumeLayout(false);
             this.toolStripMenu.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gvResults)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -155,5 +212,10 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListBox lstSolutions;
         private System.Windows.Forms.ToolStripButton btnSettings;
+        private System.Windows.Forms.DataGridView gvResults;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Type;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Description;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Suggestions;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Level;
     }
 }
