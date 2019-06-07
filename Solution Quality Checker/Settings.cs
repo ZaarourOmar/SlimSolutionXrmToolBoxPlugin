@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Solution_Quality_Checker.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,5 +16,7 @@ namespace Solution_Quality_Checker
     public class Settings
     {
         public string LastUsedOrganizationWebappUrl { get; set; }
+
+        public  ValidationSettings CurrentValidationSettings { get; set; } = ValidationSettings.Default;
     }
 }

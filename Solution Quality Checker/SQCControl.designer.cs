@@ -36,6 +36,7 @@
             this.btnCheckSolution = new System.Windows.Forms.ToolStripButton();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lstSolutions = new System.Windows.Forms.ListBox();
+            this.btnSettings = new System.Windows.Forms.ToolStripButton();
             this.toolStripMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -49,7 +50,8 @@
             this.tsbClose,
             this.tssSeparator1,
             this.btnLoadSolutions,
-            this.btnCheckSolution});
+            this.btnCheckSolution,
+            this.btnSettings});
             this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMenu.Name = "toolStripMenu";
             this.toolStripMenu.Size = new System.Drawing.Size(1308, 27);
@@ -93,7 +95,7 @@
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.splitContainer1.Location = new System.Drawing.Point(0, 27);
-            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.splitContainer1.Margin = new System.Windows.Forms.Padding(4);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -110,11 +112,22 @@
             this.lstSolutions.FormattingEnabled = true;
             this.lstSolutions.ItemHeight = 16;
             this.lstSolutions.Location = new System.Drawing.Point(0, 0);
-            this.lstSolutions.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lstSolutions.Margin = new System.Windows.Forms.Padding(4);
             this.lstSolutions.Name = "lstSolutions";
             this.lstSolutions.Size = new System.Drawing.Size(261, 639);
             this.lstSolutions.TabIndex = 0;
             this.lstSolutions.SelectedIndexChanged += new System.EventHandler(this.lstSolutions_SelectedIndexChanged);
+            // 
+            // btnSettings
+            // 
+            this.btnSettings.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnSettings.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnSettings.Image = ((System.Drawing.Image)(resources.GetObject("btnSettings.Image")));
+            this.btnSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(120, 24);
+            this.btnSettings.Text = "Change Settings";
+            this.btnSettings.Click += new System.EventHandler(this.BtnSettings_Click);
             // 
             // SQCControl
             // 
@@ -122,7 +135,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.toolStripMenu);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SQCControl";
             this.Size = new System.Drawing.Size(1308, 666);
             this.Load += new System.EventHandler(this.SQCControl_Load);
@@ -144,5 +157,6 @@
         private System.Windows.Forms.ToolStripButton btnCheckSolution;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.ListBox lstSolutions;
+        private System.Windows.Forms.ToolStripButton btnSettings;
     }
 }

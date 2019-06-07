@@ -109,12 +109,12 @@ namespace Solution_Quality_Checker
         {
             QueryExpression solutionsQuery = new QueryExpression("solution");
             solutionsQuery.ColumnSet = new ColumnSet(true);
-            solutionsQuery.Criteria.AddCondition("ismanaged",ConditionOperator.Equal,false);
+            solutionsQuery.Criteria.AddCondition("ismanaged", ConditionOperator.Equal, false);
 
             WorkAsync(new WorkAsyncInfo
             {
                 Message = "Getting all unmanaged solutions",
-           
+
                 Work = (worker, args) =>
                 {
                     args.Result = Service.RetrieveMultiple(solutionsQuery);
@@ -128,7 +128,7 @@ namespace Solution_Quality_Checker
                     var result = args.Result as EntityCollection;
                     if (result != null)
                     {
-                       foreach(Entity solution in result.Entities)
+                        foreach (Entity solution in result.Entities)
                         {
                             lstSolutions.Items.Add(solution["friendlyname"]);
                         }
@@ -141,7 +141,7 @@ namespace Solution_Quality_Checker
         private void lstSolutions_SelectedIndexChanged(object sender, EventArgs e)
         {
             var listItem = lstSolutions.SelectedItem;
-            if(listItem != null)
+            if (listItem != null)
             {
                 btnCheckSolution.Visible = true;
                 btnCheckSolution.Enabled = true;
@@ -152,5 +152,13 @@ namespace Solution_Quality_Checker
                 btnCheckSolution.Enabled = false;
             }
         }
+
+        private void BtnSettings_Click(object sender, EventArgs e)
+        {
+            ValidationSettingsForm settingsForm = new ValidationSettingsForm(mySettings);
+            settingsForm.Text = "Quality Settings";
+            settingsForm.ShowDialog();
+        }
+
     }
 }
