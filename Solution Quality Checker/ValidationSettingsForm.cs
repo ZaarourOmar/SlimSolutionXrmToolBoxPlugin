@@ -31,10 +31,10 @@ namespace Solution_Quality_Checker
 
         private void MapCheckboxesToSettings()
         {
-            AppSettings.CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"] = lstSettings.GetItemChecked(0);
-            AppSettings.CurrentValidationSettings.SettingsKVPs["CheckProcesses"] = lstSettings.GetItemChecked(1);
-            AppSettings.CurrentValidationSettings.SettingsKVPs["CheckPublishers"] = lstSettings.GetItemChecked(2);
-            AppSettings.CurrentValidationSettings.SettingsKVPs["CheckCode"] = lstSettings.GetItemChecked(3);
+            ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"] = lstSettings.GetItemChecked(0);
+            ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckProcesses"] = lstSettings.GetItemChecked(1);
+            ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckPublishers"] = lstSettings.GetItemChecked(2);
+            ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckCode"] = lstSettings.GetItemChecked(3);
         }
 
         private void MapSettingsToCheckboxes()
@@ -43,19 +43,19 @@ namespace Solution_Quality_Checker
             for (int i = 0; i < lstSettings.Items.Count; i++)
                 lstSettings.SetItemChecked(i, true);
 
-            if (!AppSettings.CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"])
+            if (!ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"])
             {
                 lstSettings.SetItemChecked(0, false);
             }
-            if (!AppSettings.CurrentValidationSettings.SettingsKVPs["CheckProcesses"])
+            if (!ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckProcesses"])
             {
                 lstSettings.SetItemChecked(1, false);
             }
-            if (!AppSettings.CurrentValidationSettings.SettingsKVPs["CheckPublishers"])
+            if (!ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckPublishers"])
             {
                 lstSettings.SetItemChecked(2, false);
             }
-            if (!AppSettings.CurrentValidationSettings.SettingsKVPs["CheckCode"])
+            if (!ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckCode"])
             {
                 lstSettings.SetItemChecked(3, false);
             }

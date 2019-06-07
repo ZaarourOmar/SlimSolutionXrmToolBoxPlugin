@@ -8,12 +8,11 @@ using Solution_Quality_Checker.Models;
 
 namespace Solution_Quality_Checker.Validators
 {
-    public class ModularityValidator : Validator
+    public class ComponentsValidator : Validator
     {
-        public ModularityValidator(IOrganizationService service) : base(service)
+        public ComponentsValidator(IOrganizationService service) : base(service)
         {
         }
-
         public override ValidationResults Validate(CRMSolution solution)
         {
             throw new NotImplementedException();

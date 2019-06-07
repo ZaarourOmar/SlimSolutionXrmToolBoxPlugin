@@ -10,6 +10,7 @@ namespace Solution_Quality_Checker.Models
     {
         Dictionary<string, bool> _settingsKVPs;
         public Dictionary<string, bool> SettingsKVPs { get => _settingsKVPs; set => _settingsKVPs = value; }
+        public static ValidationSettings CurrentValidationSettings { get; set; } = ValidationSettings.Default;
 
         public ValidationSettings(bool checkAll)
         {

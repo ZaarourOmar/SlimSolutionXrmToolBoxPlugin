@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Microsoft.Xrm.Sdk;
+using Solution_Quality_Checker.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xrm.Sdk;
-using Solution_Quality_Checker.Models;
 
 namespace Solution_Quality_Checker.Validators
 {
-    class BPFValidators : Validator
+    public class CodeValidator : Validator
     {
-        public BPFValidators(IOrganizationService service) : base(service)
+        public CodeValidator(IOrganizationService service) : base(service)
         {
         }
 

@@ -17,6 +17,5 @@ namespace Solution_Quality_Checker
     {
         public string LastUsedOrganizationWebappUrl { get; set; }
 
-        public  ValidationSettings CurrentValidationSettings { get; set; } = ValidationSettings.Default;
     }
 }
