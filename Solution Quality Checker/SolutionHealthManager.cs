@@ -12,26 +12,48 @@ namespace Solution_Quality_Checker
     public class SolutionHealthManager
     {
 
+        public event EventHandler<PartialResultsEventArgs> OnPartialResultsDone;
+
+
         public IOrganizationService CRMService { get; internal set; }
         public ValidationResults HealthIssues { get; set; }
         public ValidationSettings CurrentValidationSettings { get { return ValidationSettings.CurrentValidationSettings; } }
-        public IValidator ComponentValidator { get; set; }
-        public IValidator ProcessValidator { get; set; }
-        public IValidator CodeValidator { get; set; }
-
+        public List<IValidator> Validators { get; set; }
+       
         public SolutionHealthManager(IOrganizationService service)
         {
             CRMService = service;
             HealthIssues = new ValidationResults();
-            ComponentValidator = new ComponentsValidator(service);
-            ProcessValidator = new ProcessValidator(service);
-            CodeValidator = new CodeValidator(service);
+            Validators = Validator.GetValidators(CRMService, CurrentValidationSettings);
         }
 
-        public ValidationResults Validate(CRMSolution solution)
+        public async Task<ValidationResults> Validate(CRMSolution solution)
         {
-            return null;
+            ValidationResults finalResults = new ValidationResults();
+
+            if(Validators==null ||Validators.Count==0)
+            {
+                throw new InvalidOperationException("No Validators exist, please change the validation settings first");
+            }
+            foreach(IValidator validator in Validators)
+            {
+                ValidationResults results = await validator.Validate(solution);
+                OnPartialResultsDone?.Invoke(this,new PartialResultsEventArgs(results));
+                finalResults.AddResultSet(results);
+            }
+
+            return finalResults;
         }
 
+    }
+
+    public class PartialResultsEventArgs
+    {
+        private ValidationResults PartialResults;
+
+        public PartialResultsEventArgs(ValidationResults results)
+        {
+            this.PartialResults = results;
+        }
     }
 }

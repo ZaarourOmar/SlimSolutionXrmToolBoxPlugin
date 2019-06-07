@@ -13,9 +13,13 @@ namespace Solution_Quality_Checker.Validators
         public ComponentsValidator(IOrganizationService service) : base(service)
         {
         }
-        public override ValidationResults Validate(CRMSolution solution)
+        public override async Task<ValidationResults> Validate(CRMSolution solution)
         {
-            throw new NotImplementedException();
+            ValidationResults results = new ValidationResults();
+            return await Task.Factory.StartNew(() =>
+            {
+                return results;
+            }); 
         }
     }
 }

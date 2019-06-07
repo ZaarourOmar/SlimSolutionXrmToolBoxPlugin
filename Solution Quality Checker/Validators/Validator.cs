@@ -8,13 +8,31 @@ using System.Threading.Tasks;
 
 namespace Solution_Quality_Checker.Validators
 {
-    public abstract class Validator :IValidator
+    public abstract class Validator : IValidator
     {
         public IOrganizationService CRMService { get; set; }
         public Validator(IOrganizationService service)
         {
             CRMService = service;
         }
-        public abstract ValidationResults Validate(CRMSolution solution);
+        public abstract Task<ValidationResults> Validate(CRMSolution solution);
+
+        public static List<IValidator> GetValidators(IOrganizationService service, ValidationSettings currentValidationSettings)
+        {
+            List<IValidator> validators = new List<IValidator>();
+            if (currentValidationSettings.SettingsKVPs["CheckComponents"])
+            {
+                validators.Add(new ComponentsValidator(service));
+            }
+            if (currentValidationSettings.SettingsKVPs["CheckPRocesses"])
+            {
+                validators.Add(new ProcessValidator(service));
+            }
+            if (currentValidationSettings.SettingsKVPs["CheckCode"])
+            {
+                validators.Add(new CodeValidator(service));
+            }
+            return validators;
+        }
     }
 }
