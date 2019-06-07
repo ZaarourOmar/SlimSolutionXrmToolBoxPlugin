@@ -15,6 +15,6 @@ namespace Solution_Quality_Checker.Validators
         {
             CRMService = service;
         }
-        public abstract ValidationResults Validate(Solution solution);
+        public abstract ValidationResults Validate(CRMSolution solution);
     }
 }

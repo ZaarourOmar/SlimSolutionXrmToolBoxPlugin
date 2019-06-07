@@ -13,7 +13,7 @@ namespace Solution_Quality_Checker.Validators
         public ExtraComponentsValidator(IOrganizationService service) : base(service)
         {
         }
-        public override ValidationResults Validate(Solution solution)
+        public override ValidationResults Validate(CRMSolution solution)
         {
             throw new NotImplementedException();
         }

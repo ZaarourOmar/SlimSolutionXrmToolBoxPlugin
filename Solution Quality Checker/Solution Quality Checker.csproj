@@ -129,7 +129,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Models\Solution.cs" />
+    <Compile Include="Models\CRMSolution.cs" />
     <Compile Include="Models\ValidationResult.cs" />
     <Compile Include="Models\ValidationResults.cs" />
     <Compile Include="Models\ValidationSettings.cs" />

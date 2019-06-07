@@ -14,7 +14,7 @@ namespace Solution_Quality_Checker.Validators
         {
         }
        
-        public override ValidationResults Validate(Solution solution)
+        public override ValidationResults Validate(CRMSolution solution)
         {
             throw new NotImplementedException();
         }
