@@ -14,7 +14,7 @@ namespace Solution_Quality_Checker.Models
         public Entity BaseSolutionRecord { get; set; }
         public ExportSolutionResponse UnManagedSolutionData { get; set; }
         public ExportSolutionResponse ManagedSolutionData { get; set; }
-        public string Name { get { return BaseSolutionRecord.GetAttributeValue<string>("uniquename"); } }
+        public string UniqueName { get { return BaseSolutionRecord.GetAttributeValue<string>("uniquename"); } }
 
         public Guid Id { get { return BaseSolutionRecord.Id; } }
 

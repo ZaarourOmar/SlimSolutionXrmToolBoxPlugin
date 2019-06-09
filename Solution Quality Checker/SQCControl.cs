@@ -153,7 +153,7 @@ namespace Solution_Quality_Checker
 
                     Work = (worker, args) =>
                     {
-                        healthManager.OnPartialResultsDone += (source, progressArgs) =>
+                        healthManager.OnProgressChanged += (source, progressArgs) =>
                         {
                             worker.ReportProgress(0, progressArgs.Message);
                         };

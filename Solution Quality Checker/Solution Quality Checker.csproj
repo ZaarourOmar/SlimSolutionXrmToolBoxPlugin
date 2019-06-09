@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\..\..\AppData\Roaming\MscrmTools\XrmToolBox\Plugins\</OutputPath>
+    <OutputPath>..\..\..\Users\zarou\AppData\Roaming\MscrmTools\XrmToolBox\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -85,6 +85,7 @@
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -161,7 +162,6 @@
     <Compile Include="Validators\IValidator.cs" />
     <Compile Include="Validators\Validator.cs" />
     <Compile Include="Validators\ProcessValidator.cs" />
-    <Compile Include="Validators\CodeValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

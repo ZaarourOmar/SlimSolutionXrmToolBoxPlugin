@@ -19,15 +19,11 @@ namespace Solution_Quality_Checker.Models
             if(CheckAll)
             {
                 SettingsKVPs.Add("CheckProcesses", true);
-                SettingsKVPs.Add("CheckCode", true);
-                SettingsKVPs.Add("CheckPublishers", true);
                 SettingsKVPs.Add("CheckEntityComponents", true);
             }
             else
             {
                 SettingsKVPs.Add("CheckProcesses", true);
-                SettingsKVPs.Add("CheckCode", false);
-                SettingsKVPs.Add("CheckPublishers", false);
                 SettingsKVPs.Add("CheckEntityComponents", true);
             }
         }

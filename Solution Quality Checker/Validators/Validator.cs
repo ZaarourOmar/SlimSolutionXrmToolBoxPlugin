@@ -17,6 +17,10 @@ namespace Solution_Quality_Checker.Validators
         {
             CRMService = service;
         }
+
+        public abstract event EventHandler<ErrorEventArgs> OnValidatorError;
+        public abstract event EventHandler<ProgressEventArgs> OnValidatorProgress;
+
         public abstract ValidationResults Validate(CRMSolution solution);
 
         public static List<IValidator> GetValidators(IOrganizationService service, ValidationSettings currentValidationSettings)
@@ -30,10 +34,7 @@ namespace Solution_Quality_Checker.Validators
             {
                 validators.Add(new ProcessValidator(service));
             }
-            if (currentValidationSettings.SettingsKVPs["CheckCode"])
-            {
-                validators.Add(new CodeValidator(service));
-            }
+            
             return validators;
         }
     }

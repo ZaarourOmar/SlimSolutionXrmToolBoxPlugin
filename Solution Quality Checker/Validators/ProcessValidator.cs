@@ -18,23 +18,35 @@ namespace Solution_Quality_Checker.Validators
         }
         public override string Message => "Checking Processes";
 
+        public override event EventHandler<ErrorEventArgs> OnValidatorError;
+        public override event EventHandler<ProgressEventArgs> OnValidatorProgress;
+
         public override ValidationResults Validate(CRMSolution solution)
         {
-            ValidationResults results = new ValidationResults();
-
-            //get all solution compontents of type workflow that belong to the specified solution
-            QueryExpression processQuery = new QueryExpression("solutioncomponent");
-            processQuery.ColumnSet = new ColumnSet(true);
-            processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, 29); //worflow type
-            processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, solution.Id);
-
-            var allProcesses = CRMService.RetrieveMultiple(processQuery);
-            if (allProcesses != null && allProcesses.Entities.Count > 0)
+            try
             {
-                results = ValidateProcesses(allProcesses.Entities);
+                ValidationResults results = new ValidationResults();
+
+                //get all solution compontents of type workflow that belong to the specified solution
+                QueryExpression processQuery = new QueryExpression("solutioncomponent");
+                processQuery.ColumnSet = new ColumnSet(true);
+                processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, 29); //worflow type
+                processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, solution.Id);
+
+                var allProcesses = CRMService.RetrieveMultiple(processQuery);
+                if (allProcesses != null && allProcesses.Entities.Count > 0)
+                {
+                    results = ValidateProcesses(allProcesses.Entities);
+                }
+
+                return results;
+            }
+            catch(Exception ex)
+            {
+                OnValidatorError?.Invoke(this, new ErrorEventArgs(ex));
+                return null;
             }
 
-            return results;
         }
 
 
