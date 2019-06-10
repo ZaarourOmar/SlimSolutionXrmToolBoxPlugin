@@ -10,22 +10,24 @@ using System.Threading.Tasks;
 
 namespace SlimSolution
 {
-    public class SolutionHealthManager
+    public class SlimSolutionManager
     {
 
         public event EventHandler<ErrorEventArgs> OnError;
         public event EventHandler<ProgressEventArgs> OnProgressChanged;
 
         public IOrganizationService CRMService { get; internal set; }
-        public ValidationResults HealthIssues { get; set; }
+        public ValidationResults Results { get; set; }
         public List<IValidator> Validators { get; set; }
         public Settings MySettings { get; set; }
-        public SolutionHealthManager(IOrganizationService service, Settings mySettings)
+        public List<CRMSolutionComponent> ExtraComponents { get; set; }
+
+        public SlimSolutionManager(IOrganizationService service, Settings mySettings)
         {
             CRMService = service;
-            HealthIssues = new ValidationResults();
-            Validators = GetValidators();
             MySettings = mySettings;
+            Results = new ValidationResults();
+            Validators = GetValidators();
         }
 
         public ValidationResults Validate(CRMSolution solution)
@@ -37,10 +39,13 @@ namespace SlimSolution
                 throw new InvalidOperationException("No Validators exist, please change the validation settings first");
             }
 
-            // publish all customizations first
-            // OnProgressChanged?.Invoke(this, new ProgressEventArgs("Publishing customizations"));
-            // PublishAllXmlRequest publishRequest = new PublishAllXmlRequest();
-            // CRMService.Execute(publishRequest);
+            //publish all customizations first if the settings allow it
+            if (MySettings.ValidationSettings[2].Value)
+            {
+                OnProgressChanged?.Invoke(this, new ProgressEventArgs("Publishing customizations"));
+                PublishAllXmlRequest publishRequest = new PublishAllXmlRequest();
+                CRMService.Execute(publishRequest);
+            }
 
             // start the validators
             foreach (IValidator validator in Validators)
@@ -74,6 +79,24 @@ namespace SlimSolution
             }
 
             return validators;
+        }
+
+        public void RemoveExtraComponents(CRMSolution crmSolution)
+        {
+            if (ExtraComponents != null)
+            {
+                OnProgressChanged?.Invoke(this, new ProgressEventArgs("Removing extra components"));
+                foreach (CRMSolutionComponent component in ExtraComponents)
+                {
+                    RemoveSolutionComponentRequest removereq = new RemoveSolutionComponentRequest();
+                    removereq.SolutionUniqueName = crmSolution.UniqueName;
+                    removereq.ComponentId = component.ID;
+                    CRMService.Execute(removereq);
+                }
+                OnProgressChanged?.Invoke(this, new ProgressEventArgs("Publishing Customizations"));
+                PublishAllXmlRequest publishRequest = new PublishAllXmlRequest();
+                CRMService.Execute(publishRequest);
+            }
         }
     }
 

@@ -20,7 +20,12 @@ namespace SlimSolution
         }
         public string LastUsedOrganizationWebappUrl { get; set; }
 
-        public SerializableKeyValuePair<string, bool>[] _validationSettingsKVPs = new SerializableKeyValuePair<string, bool>[2] { new SerializableKeyValuePair<string, bool>("", true), new SerializableKeyValuePair<string, bool>("", true) };
+        public SerializableKeyValuePair<string, bool>[] _validationSettingsKVPs = new SerializableKeyValuePair<string, bool>[3] 
+        {
+            new SerializableKeyValuePair<string, bool>("CheckComponents", true),
+            new SerializableKeyValuePair<string, bool>("CheckProcesses", true),
+            new SerializableKeyValuePair<string, bool>("ALWAYSPUBLISH", true)
+        };
         public SerializableKeyValuePair<string, bool>[] ValidationSettings { get => _validationSettingsKVPs; set => _validationSettingsKVPs = value; }
     }
 

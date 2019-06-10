@@ -47,7 +47,7 @@ namespace SlimSolution.Validators
             // get all solution entities 
             QueryExpression processQuery = new QueryExpression("solutioncomponent");
             processQuery.ColumnSet = new ColumnSet(true);
-            processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, 1); // find entities
+            processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, Constants.ENTITY_COMPONENT_TYPE);
             processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, solution.Id);
             var components = CRMService.RetrieveMultiple(processQuery);
 
@@ -87,21 +87,19 @@ namespace SlimSolution.Validators
                 try
                 {
                     string zipFileName = solution.UniqueName + ".zip";
-                    string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-                    string targetDirectory = appDataFolder + "\\HealthCheckerSolutions\\";
-                    string customiationXmlPath = targetDirectory + "\\customizations.xml";
-                    string zipPath = targetDirectory + zipFileName;
+                    string customiationXmlPath = Constants.APP_DATA_DIRECTOY_NAME + "\\customizations.xml";
+                    string zipPath = Constants.APP_DATA_DIRECTOY_NAME + zipFileName;
 
                     // cleanup an existing directory files
-                    if (Directory.Exists(targetDirectory))
+                    if (Directory.Exists(Constants.APP_DATA_DIRECTOY_NAME))
                     {
-                        Directory.Delete(targetDirectory, true);
+                        Directory.Delete(Constants.APP_DATA_DIRECTOY_NAME, true);
                     }
 
                     // recreate the directory
-                    if (!Directory.Exists(targetDirectory))
+                    if (!Directory.Exists(Constants.APP_DATA_DIRECTOY_NAME))
                     {
-                        Directory.CreateDirectory(targetDirectory);
+                        Directory.CreateDirectory(Constants.APP_DATA_DIRECTOY_NAME);
                     }
 
                     // write the managed solution as a zip file in the directory
@@ -110,7 +108,7 @@ namespace SlimSolution.Validators
 
                     // extract the zip file to get the customizations.xml file content
                     OnValidatorProgress?.Invoke(this, new ProgressEventArgs("Extracting Managed Solution"));
-                    ZipFile.ExtractToDirectory(zipPath, targetDirectory);
+                    ZipFile.ExtractToDirectory(zipPath, Constants.APP_DATA_DIRECTOY_NAME);
 
 
                     //at this point customization.xml file should be ready, load it into an xdocument object

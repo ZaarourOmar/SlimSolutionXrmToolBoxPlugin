@@ -23,32 +23,19 @@ namespace SlimSolution
         }
 
 
-        private void CheckedListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
 
         private void MapCheckboxesToSettings()
         {
             AppSettings.ValidationSettings[0].Value = lstSettings.GetItemChecked(0);
             AppSettings.ValidationSettings[1].Value = lstSettings.GetItemChecked(1);
+            AppSettings.ValidationSettings[2].Value = chkBoxAlwaysPublish.Checked;
         }
 
         private void MapSettingsToCheckboxes()
         {
-
-            for (int i = 0; i < lstSettings.Items.Count; i++)
-                lstSettings.SetItemChecked(i, true);
-
-            if (!AppSettings.ValidationSettings[0].Value)
-            {
-                lstSettings.SetItemChecked(0, false);
-            }
-            if (!AppSettings.ValidationSettings[1].Value)
-            {
-                lstSettings.SetItemChecked(1, false);
-            }
+            lstSettings.SetItemChecked(0, AppSettings.ValidationSettings[0].Value);
+            lstSettings.SetItemChecked(1, AppSettings.ValidationSettings[1].Value);
+            chkBoxAlwaysPublish.Checked = AppSettings.ValidationSettings[2].Value;
         }
         private void BtnSaveSettings_Click(object sender, EventArgs e)
         {

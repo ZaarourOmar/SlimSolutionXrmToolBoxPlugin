@@ -31,12 +31,13 @@
             this.btnSaveSettings = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.lstSettings = new System.Windows.Forms.CheckedListBox();
+            this.chkBoxAlwaysPublish = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // btnSaveSettings
             // 
             this.btnSaveSettings.Location = new System.Drawing.Point(192, 183);
-            this.btnSaveSettings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSaveSettings.Margin = new System.Windows.Forms.Padding(2);
             this.btnSaveSettings.Name = "btnSaveSettings";
             this.btnSaveSettings.Size = new System.Drawing.Size(75, 28);
             this.btnSaveSettings.TabIndex = 6;
@@ -63,21 +64,33 @@
             "Entity Components",
             "Processes"});
             this.lstSettings.Location = new System.Drawing.Point(3, 19);
-            this.lstSettings.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.lstSettings.Margin = new System.Windows.Forms.Padding(2);
             this.lstSettings.Name = "lstSettings";
-            this.lstSettings.Size = new System.Drawing.Size(266, 139);
+            this.lstSettings.Size = new System.Drawing.Size(266, 64);
             this.lstSettings.TabIndex = 4;
-            this.lstSettings.SelectedIndexChanged += new System.EventHandler(this.CheckedListBox1_SelectedIndexChanged);
+            // 
+            // chkBoxAlwaysPublish
+            // 
+            this.chkBoxAlwaysPublish.AutoSize = true;
+            this.chkBoxAlwaysPublish.Checked = true;
+            this.chkBoxAlwaysPublish.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBoxAlwaysPublish.Location = new System.Drawing.Point(3, 88);
+            this.chkBoxAlwaysPublish.Name = "chkBoxAlwaysPublish";
+            this.chkBoxAlwaysPublish.Size = new System.Drawing.Size(96, 17);
+            this.chkBoxAlwaysPublish.TabIndex = 7;
+            this.chkBoxAlwaysPublish.Text = "Always Publish";
+            this.chkBoxAlwaysPublish.UseVisualStyleBackColor = true;
             // 
             // ValidationSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(278, 215);
+            this.Controls.Add(this.chkBoxAlwaysPublish);
             this.Controls.Add(this.btnSaveSettings);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lstSettings);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "ValidationSettingsForm";
             this.Text = "Validation Settings Form";
             this.ResumeLayout(false);
@@ -89,5 +102,6 @@
         private System.Windows.Forms.Button btnSaveSettings;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.CheckedListBox lstSettings;
+        private System.Windows.Forms.CheckBox chkBoxAlwaysPublish;
     }
 }

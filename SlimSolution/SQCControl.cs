@@ -106,6 +106,9 @@ namespace SlimSolution
                         foreach (Entity solution in result.Entities)
                         {
                             ListBoxItem lstItem = new ListBoxItem();
+                            if (solution.GetAttributeValue<string>("friendlyname") == "Active Solution" || solution.GetAttributeValue<string>("friendlyname") == "Base Solution" || solution.GetAttributeValue<string>("friendlyname") == "Default Solution")
+                                return;
+
                             lstItem.Name = solution.GetAttributeValue<string>("uniquename");
                             lstItem.Content = solution.GetAttributeValue<string>("friendlyname");
                             lstSolutions.Items.Add(lstItem);
@@ -137,10 +140,13 @@ namespace SlimSolution
             settingsForm.ShowDialog();
         }
 
+        SlimSolutionManager slimSolutionManager;
+        CRMSolution crmSolution;
+
         private void btnCheckSolution_Click(object sender, EventArgs e)
         {
-            CRMSolution crmSolution;
-            SolutionHealthManager healthManager = new SolutionHealthManager(Service, mySettings);
+            slimSolutionManager = new SlimSolutionManager(Service, mySettings);
+
             var selectedSolutionItem = lstSolutions.SelectedItem as ListBoxItem;
             if (selectedSolutionItem != null)
             {
@@ -154,11 +160,11 @@ namespace SlimSolution
 
                     Work = (worker, args) =>
                     {
-                        healthManager.OnProgressChanged += (source, progressArgs) =>
+                        slimSolutionManager.OnProgressChanged += (source, progressArgs) =>
                         {
                             worker.ReportProgress(0, progressArgs.Message);
                         };
-                        finalResults = healthManager.Validate(crmSolution);
+                        finalResults = slimSolutionManager.Validate(crmSolution);
                     },
                     PostWorkCallBack = (args) =>
                     {
@@ -186,6 +192,15 @@ namespace SlimSolution
             }
         }
 
-
+        private void btnRemoveExtraComponents_Click(object sender, EventArgs e)
+        {
+            if (slimSolutionManager != null && slimSolutionManager.Results != null && crmSolution != null)
+            {
+                if (MessageBox.Show("This process will remove all the uneeded attributes, forms and views from the selected solution, continue?") == DialogResult.OK)
+                {
+                    slimSolutionManager.RemoveExtraComponents(crmSolution);
+                }
+            }
+        }
     }
 }

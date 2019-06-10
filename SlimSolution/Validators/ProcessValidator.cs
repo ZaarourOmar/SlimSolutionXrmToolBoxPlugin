@@ -11,18 +11,24 @@ using SlimSolution.Models;
 
 namespace SlimSolution.Validators
 {
+    /// <summary>
+    /// This validator is responsible for Process Validation. For now it only finds those process that are inactive in an unmanaged solution.
+    /// </summary>
     public class ProcessValidator : IValidator
     {
+
+        public event EventHandler<ErrorEventArgs> OnValidatorError;
+        public event EventHandler<ProgressEventArgs> OnValidatorProgress;
+
+        public IOrganizationService CRMService { get; set; }
+        public string Message { get { return "Checking Processes"; } }
+
         public ProcessValidator(IOrganizationService service)
         {
             CRMService = service;
         }
-        public string Message => "Checking Processes";
 
-        public IOrganizationService CRMService { get; set; }
 
-        public event EventHandler<ErrorEventArgs> OnValidatorError;
-        public event EventHandler<ProgressEventArgs> OnValidatorProgress;
 
         public ValidationResults Validate(CRMSolution solution)
         {
@@ -33,7 +39,7 @@ namespace SlimSolution.Validators
                 //get all solution compontents of type workflow that belong to the specified solution
                 QueryExpression processQuery = new QueryExpression("solutioncomponent");
                 processQuery.ColumnSet = new ColumnSet(true);
-                processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, 29); //worflow type
+                processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, Constants.PROCESS_COMPONENT_TYPE);
                 processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, solution.Id);
 
                 var allProcesses = CRMService.RetrieveMultiple(processQuery);
