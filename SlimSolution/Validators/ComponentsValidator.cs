@@ -13,9 +13,9 @@ using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
 using Microsoft.Xrm.Sdk.Query;
-using Solution_Quality_Checker.Models;
+using SlimSolution.Models;
 
-namespace Solution_Quality_Checker.Validators
+namespace SlimSolution.Validators
 {
     public class ComponentsValidator : IValidator
     {
@@ -49,12 +49,12 @@ namespace Solution_Quality_Checker.Validators
             processQuery.ColumnSet = new ColumnSet(true);
             processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, 1); // find entities
             processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, solution.Id);
-            var entityComponents = CRMService.RetrieveMultiple(processQuery);
+            var components = CRMService.RetrieveMultiple(processQuery);
 
 
             // request each entity data separately and add it to a list
             List<RetrieveEntityResponse> allEntities = new List<RetrieveEntityResponse>();
-            foreach (var componentEntity in entityComponents.Entities)
+            foreach (var componentEntity in components.Entities)
             {
                 RetrieveEntityRequest entityRequest = new RetrieveEntityRequest
                 {

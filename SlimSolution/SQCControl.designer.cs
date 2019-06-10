@@ -1,4 +1,4 @@
-﻿namespace Solution_Quality_Checker
+﻿namespace SlimSolution
 {
     partial class SQCControl
     {

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.645
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solution Quality Checker", "Solution Quality Checker\Solution Quality Checker.csproj", "{79DF82C0-8109-4BE1-9A07-07C31739267B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SlimSolution", "SlimSolution\SlimSolution.csproj", "{79DF82C0-8109-4BE1-9A07-07C31739267B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

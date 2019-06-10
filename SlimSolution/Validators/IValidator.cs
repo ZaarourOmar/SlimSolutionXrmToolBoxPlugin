@@ -1,9 +1,9 @@
 ﻿using Microsoft.Xrm.Sdk;
-using Solution_Quality_Checker.Models;
+using SlimSolution.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace Solution_Quality_Checker.Validators
+namespace SlimSolution.Validators
 {
     public interface IValidator
     {

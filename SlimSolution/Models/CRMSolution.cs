@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Solution_Quality_Checker.Models
+namespace SlimSolution.Models
 {
     public class CRMSolution
     {

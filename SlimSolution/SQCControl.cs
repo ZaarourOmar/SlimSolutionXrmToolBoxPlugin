@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using XrmToolBox.Extensibility;
 using Microsoft.Xrm.Sdk.Query;
 using Microsoft.Xrm.Sdk;
 using McTools.Xrm.Connection;
 using System.Windows.Controls;
-using Solution_Quality_Checker.Models;
-using Microsoft.Xrm.Sdk.Organization;
+using SlimSolution.Models;
 
-namespace Solution_Quality_Checker
+namespace SlimSolution
 {
     public partial class SQCControl : PluginControlBase
     {

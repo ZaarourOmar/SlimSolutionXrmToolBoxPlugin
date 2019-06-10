@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Windows.Markup;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using Solution_Quality_Checker.Models;
+using SlimSolution.Models;
 
-namespace Solution_Quality_Checker.Validators
+namespace SlimSolution.Validators
 {
     public class ProcessValidator : IValidator
     {

@@ -1,14 +1,14 @@
 ﻿using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
-using Solution_Quality_Checker.Models;
-using Solution_Quality_Checker.Validators;
+using SlimSolution.Models;
+using SlimSolution.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Solution_Quality_Checker
+namespace SlimSolution
 {
     public class SolutionHealthManager
     {

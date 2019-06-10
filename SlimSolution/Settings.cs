@@ -1,11 +1,11 @@
-﻿using Solution_Quality_Checker.Models;
+﻿using SlimSolution.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Solution_Quality_Checker
+namespace SlimSolution
 {
     /// <summary>
     /// This class can help you to store settings for your plugin

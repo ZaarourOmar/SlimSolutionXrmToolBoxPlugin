@@ -8,8 +8,8 @@
     <ProjectGuid>{79DF82C0-8109-4BE1-9A07-07C31739267B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Solution_Quality_Checker</RootNamespace>
-    <AssemblyName>Solution Quality Checker</AssemblyName>
+    <RootNamespace>SlimSolution</RootNamespace>
+    <AssemblyName>SlimSolution</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -133,9 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\CRMSolution.cs" />
-    <Compile Include="Models\ValidationResult.cs" />
     <Compile Include="Models\ValidationResults.cs" />
-    <Compile Include="Models\ValidationSettings.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -151,7 +149,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SolutionHealthManager.cs" />
-    <Compile Include="Utils.cs" />
     <Compile Include="ValidationSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
