@@ -34,21 +34,21 @@ namespace Solution_Quality_Checker.Validators
 
         public ValidationResults Validate(CRMSolution solution)
         {
-            ValidationResults results = new ValidationResults();
+            ValidationResults validatorResults = new ValidationResults();
 
-            List<RetrieveEntityResponse> managedEntities = GetAllManagedEntities(solution);
+            List<RetrieveEntityResponse> managedEntities = GetAllEntitiesInTheSolution(solution);
 
             ValidationResults results2 = ValidateManagedSolution(solution, managedEntities);
-            results.AddResultSet(results2);
+            validatorResults.AddResultSet(results2);
             // find all managed components of the solution
 
 
             //find if any managed components contains no unmanaged changes and flag it.
-            return results;
+            return validatorResults;
 
         }
 
-        private List<RetrieveEntityResponse> GetAllManagedEntities(CRMSolution solution)
+        private List<RetrieveEntityResponse> GetAllEntitiesInTheSolution(CRMSolution solution)
         {
             // get all solution entities 
             QueryExpression processQuery = new QueryExpression("solutioncomponent");
@@ -57,12 +57,14 @@ namespace Solution_Quality_Checker.Validators
             processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, solution.Id);
             var components = CRMService.RetrieveMultiple(processQuery);
 
+
+            // request each entity data separately and add it to a list
             List<RetrieveEntityResponse> allEntities = new List<RetrieveEntityResponse>();
             foreach (var componentEntity in components.Entities)
             {
                 RetrieveEntityRequest entityRequest = new RetrieveEntityRequest
                 {
-                    EntityFilters = EntityFilters.Attributes,
+                    EntityFilters = EntityFilters.All,
                     MetadataId = componentEntity.GetAttributeValue<Guid>("objectid"),
                     RetrieveAsIfPublished = true,
 
@@ -79,11 +81,12 @@ namespace Solution_Quality_Checker.Validators
         {
 
             ValidationResults results = new ValidationResults();
-            // export the solution as managed
+
+            // export the solution as managed and extract it to get the customizations xml
             ExportSolutionRequest exportRequest = new ExportSolutionRequest();
             exportRequest.Managed = true;
             exportRequest.SolutionName = solution.UniqueName;
-            OnValidatorProgress?.Invoke(this, new ProgressEventArgs("Exorting solution as managed"));
+            OnValidatorProgress?.Invoke(this, new ProgressEventArgs("Exporting solution as managed"));
             ExportSolutionResponse managedResponse = CRMService.Execute(exportRequest) as ExportSolutionResponse;
             if (managedResponse != null)
             {
@@ -95,34 +98,43 @@ namespace Solution_Quality_Checker.Validators
                     string customiationXmlPath = targetDirectory + "\\customizations.xml";
                     string zipPath = targetDirectory + zipFileName;
 
+                    // cleanup an existing directory files
+                    if (Directory.Exists(targetDirectory))
+                    {
+                        Directory.Delete(targetDirectory, true);
+                    }
 
+                    // recreate the directory
                     if (!Directory.Exists(targetDirectory))
                     {
                         Directory.CreateDirectory(targetDirectory);
                     }
 
+                    // write the managed solution as a zip file in the directory
                     OnValidatorProgress?.Invoke(this, new ProgressEventArgs("Saving Managed Solution"));
-
                     File.WriteAllBytes(zipPath, managedResponse.ExportSolutionFile);
 
+                    // extract the zip file to get the customizations.xml file content
                     OnValidatorProgress?.Invoke(this, new ProgressEventArgs("Extracting Managed Solution"));
                     ZipFile.ExtractToDirectory(zipPath, targetDirectory);
 
 
-                    //at this point customization.xml file should be ready
+                    //at this point customization.xml file should be ready, load it into an xdocument object
                     if (File.Exists(customiationXmlPath))
                     {
                         OnValidatorProgress?.Invoke(this, new ProgressEventArgs("Checking the Customization File"));
 
                         XDocument customizationsXml = XDocument.Load(customiationXmlPath);
-                        results = CheckAttributes(customizationsXml, managedEntities);
+                        results.AddResultSet(CheckAttributes(customizationsXml, managedEntities));
+                        results.AddResultSet(CheckViews(customizationsXml, managedEntities));
+                        results.AddResultSet(CheckForms(customizationsXml, managedEntities));
                     }
 
                 }
 
                 catch (IOException ex)
                 {
-                    // fire an error
+                    // fire an error to be catched by whoever is listening to the OnValidationError Event
                     OnValidatorError?.Invoke(this, new ErrorEventArgs(ex));
                 }
 
@@ -130,32 +142,112 @@ namespace Solution_Quality_Checker.Validators
             return results;
         }
 
-        private ValidationResults CheckAttributes(XDocument doc, List<RetrieveEntityResponse> managedEntities)
+        private ValidationResults CheckForms(XDocument customizationsXml, List<RetrieveEntityResponse> managedEntities)
         {
             ValidationResults results = new ValidationResults();
-            var entities = (from c in doc.Descendants("Entity") select c).Distinct();
-            Dictionary<string, List<XElement>> attributesCollection = new Dictionary<string, List<XElement>>();
+            var entities = (from c in customizationsXml.Descendants("Entity") select c).Distinct();
+            Dictionary<string, List<XElement>> formCollections = new Dictionary<string, List<XElement>>();
+            foreach (var entity in entities)
+            {
+                if (!entity.Element("Name").Value.Contains("_") && entity.Descendants("systemform") != null) // we need only system entities tht have no publishers
+                    formCollections[entity.Element("Name").Value] = (from x in entity.Descendants("systemform") select x).ToList<XElement>();
+            }
+
+            foreach (var formCollection in formCollections)
+            {
+                if (formCollection.Value.Count > 0)
+                {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    Models.ValidationResult result = new Models.ValidationResult();
+                    stringBuilder.Append("Only add these forms to the solution:\n\n");
+                    foreach (XElement formElement in formCollection.Value)
+                    {
+                        if (formElement.Descendants("LocalizedName") != null)
+                            stringBuilder.Append(formElement.Descendants("LocalizedName").ElementAt(0).Attribute("description").Value + ",   \n");
+                    }
+
+                    if (formCollections.Count > 0)
+                    {
+                        result.Description = stringBuilder.ToString();
+                        result.Suggestions = "Try to have only the needed forms in the solution. Any custom form or a modified managed form are good to be in the solution but nothing else.";
+                        result.Type = formCollection.Key + " " + "Entity Forms";
+                        result.PriorityLevel = ValidationResultLevel.Medium;
+                        results.AddResult(result);
+                    }
+                }
+            }
+            return results;
+        }
+
+        private ValidationResults CheckViews(XDocument customizationsXml, List<RetrieveEntityResponse> managedEntities)
+        {
+            ValidationResults results = new ValidationResults();
+            var entities = (from c in customizationsXml.Descendants("Entity") select c).Distinct();
+            Dictionary<string, List<XElement>> viewsCollections = new Dictionary<string, List<XElement>>();
             foreach (var entity in entities)
             {
                 if (!entity.Element("Name").Value.Contains("_")) // we need only system entities tht have no publishers
-                    attributesCollection[entity.Element("Name").Value] = (from x in entity.Descendants("attribute") select x).ToList<XElement>();
+                    viewsCollections[entity.Element("Name").Value] = (from x in entity.Descendants("savedquery") select x).ToList<XElement>();
             }
 
-            foreach (var attCollection in attributesCollection)
+            foreach (var viewCollection in viewsCollections)
             {
-                StringBuilder s = new StringBuilder();
-                Models.ValidationResult result = new Models.ValidationResult();
-                s.Append("Only add these fields to the solution:\n");
-                foreach (XElement element in attCollection.Value)
+                if (viewCollection.Value.Count > 0)
                 {
-                    if (element.Attribute("PhysicalName") != null)
-                        s.Append(element.Attribute("PhysicalName").Value + ",   \n");
+                    StringBuilder stringBuilder = new StringBuilder();
+                    Models.ValidationResult result = new Models.ValidationResult();
+                    stringBuilder.Append("Only add these views to the solution:\n\n");
+                    foreach (XElement viewElement in viewCollection.Value)
+                    {
+                        if (viewElement.Descendants("LocalizedName") != null)
+                            stringBuilder.Append(viewElement.Descendants("LocalizedName").ElementAt(0).Attribute("description").Value + ",   \n");
+                    }
+
+                    if (viewsCollections.Count > 0)
+                    {
+                        result.Description = stringBuilder.ToString();
+                        result.Suggestions = "Try to have only the needed views in the solution. Any custom views or a modified managed views are good to be in the solution but nothing else.";
+                        result.Type = viewCollection.Key + " " + "Entity Views";
+                        result.PriorityLevel = ValidationResultLevel.Medium;
+                        results.AddResult(result);
+                    }
                 }
-                result.Description = s.ToString();
-                result.Suggestions = "Try to have only the needed fields in the solution. Any custom field or a modified managed field are good to be in the solution but nothing else.";
-                result.Type = attCollection.Key + " " + "Entity Fields";
-                result.PriorityLevel = ValidationResultLevel.Medium;
-                results.AddResult(result);
+            }
+            return results;
+        }
+
+        private ValidationResults CheckAttributes(XDocument customizationsXml, List<RetrieveEntityResponse> managedEntities)
+        {
+            ValidationResults results = new ValidationResults();
+            var entities = (from c in customizationsXml.Descendants("Entity") select c).Distinct();
+            Dictionary<string, List<XElement>> attributesCollections = new Dictionary<string, List<XElement>>();
+            foreach (var entity in entities)
+            {
+                if (!entity.Element("Name").Value.Contains("_")) // we need only system entities tht have no publishers
+                    attributesCollections[entity.Element("Name").Value] = (from x in entity.Descendants("attribute") select x).ToList<XElement>();
+            }
+
+            foreach (var attCollection in attributesCollections)
+            {
+                if (attCollection.Value.Count > 0)
+                {
+                    StringBuilder s = new StringBuilder();
+                    Models.ValidationResult result = new Models.ValidationResult();
+                    s.Append("Only add these fields to the solution:\n\n");
+                    foreach (XElement element in attCollection.Value)
+                    {
+                        if (element.Attribute("PhysicalName") != null && element.Descendants("displayname") != null)
+                            s.Append($"{element.Descendants("displayname").ElementAt(0).Attribute("description").Value} ({ element.Attribute("PhysicalName").Value}),   \n");
+                    }
+                    if (attributesCollections.Count > 0)
+                    {
+                        result.Description = s.ToString();
+                        result.Suggestions = "Try to have only the needed fields in the solution. Any custom field or a modified managed field are good to be in the solution but nothing else.";
+                        result.Type = attCollection.Key + " " + "Entity Fields";
+                        result.PriorityLevel = ValidationResultLevel.Medium;
+                        results.AddResult(result);
+                    }
+                }
             }
             return results;
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Xrm.Sdk;
+﻿using Microsoft.Crm.Sdk.Messages;
+using Microsoft.Xrm.Sdk;
 using Solution_Quality_Checker.Models;
 using Solution_Quality_Checker.Validators;
 using System;
@@ -35,6 +36,13 @@ namespace Solution_Quality_Checker
             {
                 throw new InvalidOperationException("No Validators exist, please change the validation settings first");
             }
+
+            // publish all customizations first
+            OnProgressChanged?.Invoke(this, new ProgressEventArgs("Publishing customizations"));
+            PublishAllXmlRequest publishRequest = new PublishAllXmlRequest();
+            CRMService.Execute(publishRequest);
+
+            // start the validators
             foreach (IValidator validator in Validators)
             {
 

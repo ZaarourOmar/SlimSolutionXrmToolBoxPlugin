@@ -146,7 +146,7 @@ namespace Solution_Quality_Checker
                 Entity solutionRecord = originalSolutions.FirstOrDefault(x => x.GetAttributeValue<string>("uniquename") == selectedSolutionItem.Name);
                 crmSolution = new CRMSolution(solutionRecord);
                 ValidationResults finalResults = new ValidationResults();
-
+                gvResults.Rows.Clear();
                 WorkAsync(new WorkAsyncInfo
                 {
                     Message = "Checking solution health ... ",
