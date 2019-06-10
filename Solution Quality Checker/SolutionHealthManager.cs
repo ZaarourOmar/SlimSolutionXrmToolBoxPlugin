@@ -18,14 +18,14 @@ namespace Solution_Quality_Checker
 
         public IOrganizationService CRMService { get; internal set; }
         public ValidationResults HealthIssues { get; set; }
-        public ValidationSettings CurrentValidationSettings { get { return ValidationSettings.CurrentValidationSettings; } }
         public List<IValidator> Validators { get; set; }
-
-        public SolutionHealthManager(IOrganizationService service)
+        public Settings MySettings { get; set; }
+        public SolutionHealthManager(IOrganizationService service, Settings mySettings)
         {
             CRMService = service;
             HealthIssues = new ValidationResults();
             Validators = GetValidators();
+            MySettings = mySettings;
         }
 
         public ValidationResults Validate(CRMSolution solution)
@@ -38,9 +38,9 @@ namespace Solution_Quality_Checker
             }
 
             // publish all customizations first
-            OnProgressChanged?.Invoke(this, new ProgressEventArgs("Publishing customizations"));
-            PublishAllXmlRequest publishRequest = new PublishAllXmlRequest();
-            CRMService.Execute(publishRequest);
+            // OnProgressChanged?.Invoke(this, new ProgressEventArgs("Publishing customizations"));
+            // PublishAllXmlRequest publishRequest = new PublishAllXmlRequest();
+            // CRMService.Execute(publishRequest);
 
             // start the validators
             foreach (IValidator validator in Validators)
@@ -64,11 +64,11 @@ namespace Solution_Quality_Checker
         public List<IValidator> GetValidators()
         {
             List<IValidator> validators = new List<IValidator>();
-            if (CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"])
+            if (MySettings.ValidationSettings[0].Value)
             {
                 validators.Add(new ComponentsValidator(CRMService));
             }
-            if (CurrentValidationSettings.SettingsKVPs["CheckProcesses"])
+            if (MySettings.ValidationSettings[1].Value)
             {
                 validators.Add(new ProcessValidator(CRMService));
             }

@@ -24,7 +24,7 @@ namespace Solution_Quality_Checker.Validators
         public event EventHandler<ProgressEventArgs> OnValidatorProgress;
 
         public IOrganizationService CRMService { get; set; }
-        public string Message { get { return "Checking Components"; } }
+        public string Message { get { return "Checking Forms, Views and Attributes"; } }
 
 
         public ComponentsValidator(IOrganizationService service)
@@ -35,15 +35,9 @@ namespace Solution_Quality_Checker.Validators
         public ValidationResults Validate(CRMSolution solution)
         {
             ValidationResults validatorResults = new ValidationResults();
-
-            List<RetrieveEntityResponse> managedEntities = GetAllEntitiesInTheSolution(solution);
-
-            ValidationResults results2 = ValidateManagedSolution(solution, managedEntities);
-            validatorResults.AddResultSet(results2);
-            // find all managed components of the solution
-
-
-            //find if any managed components contains no unmanaged changes and flag it.
+            List<RetrieveEntityResponse> solutionEntities = GetAllEntitiesInTheSolution(solution);
+            ValidationResults results = ValidateManagedSolutionComponents(solution, solutionEntities);
+            validatorResults.AddResultSet(results);
             return validatorResults;
 
         }
@@ -55,12 +49,12 @@ namespace Solution_Quality_Checker.Validators
             processQuery.ColumnSet = new ColumnSet(true);
             processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, 1); // find entities
             processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, solution.Id);
-            var components = CRMService.RetrieveMultiple(processQuery);
+            var entityComponents = CRMService.RetrieveMultiple(processQuery);
 
 
             // request each entity data separately and add it to a list
             List<RetrieveEntityResponse> allEntities = new List<RetrieveEntityResponse>();
-            foreach (var componentEntity in components.Entities)
+            foreach (var componentEntity in entityComponents.Entities)
             {
                 RetrieveEntityRequest entityRequest = new RetrieveEntityRequest
                 {
@@ -77,7 +71,7 @@ namespace Solution_Quality_Checker.Validators
 
         }
 
-        private ValidationResults ValidateManagedSolution(CRMSolution solution, List<RetrieveEntityResponse> managedEntities)
+        private ValidationResults ValidateManagedSolutionComponents(CRMSolution solution, List<RetrieveEntityResponse> managedEntities)
         {
 
             ValidationResults results = new ValidationResults();

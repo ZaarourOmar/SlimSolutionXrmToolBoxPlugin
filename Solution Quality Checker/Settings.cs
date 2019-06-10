@@ -15,7 +15,31 @@ namespace Solution_Quality_Checker
     /// </remarks>
     public class Settings
     {
+        public Settings()
+        {
+        }
         public string LastUsedOrganizationWebappUrl { get; set; }
+
+        public SerializableKeyValuePair<string, bool>[] _validationSettingsKVPs = new SerializableKeyValuePair<string, bool>[2] { new SerializableKeyValuePair<string, bool>("", true), new SerializableKeyValuePair<string, bool>("", true) };
+        public SerializableKeyValuePair<string, bool>[] ValidationSettings { get => _validationSettingsKVPs; set => _validationSettingsKVPs = value; }
+    }
+
+    [Serializable]
+    public class SerializableKeyValuePair<TKey, TValue>
+    {
+
+        public SerializableKeyValuePair()
+        {
+        }
+
+        public SerializableKeyValuePair(TKey key, TValue value)
+        {
+            Key = key;
+            Value = value;
+        }
+
+        public TKey Key { get; set; }
+        public TValue Value { get; set; }
 
     }
 }

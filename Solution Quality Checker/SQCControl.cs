@@ -39,7 +39,7 @@ namespace Solution_Quality_Checker
             }
             else
             {
-                LogInfo("Settings found and loaded");
+                LogInfo("Settings found and public List<SerializableKeyValuePair<string, bool>>");
             }
         }
 
@@ -55,8 +55,15 @@ namespace Solution_Quality_Checker
         /// <param name="e"></param>
         private void SQCControl_OnCloseTool(object sender, EventArgs e)
         {
-            // Before leaving, save the settings
-            SettingsManager.Instance.Save(GetType(), mySettings);
+            try
+            {
+                // Before leaving, save the settings
+                SettingsManager.Instance.Save(GetType(), mySettings);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         /// <summary>
@@ -139,7 +146,7 @@ namespace Solution_Quality_Checker
         private void btnCheckSolution_Click(object sender, EventArgs e)
         {
             CRMSolution crmSolution;
-            SolutionHealthManager healthManager = new SolutionHealthManager(Service);
+            SolutionHealthManager healthManager = new SolutionHealthManager(Service, mySettings);
             var selectedSolutionItem = lstSolutions.SelectedItem as ListBoxItem;
             if (selectedSolutionItem != null)
             {

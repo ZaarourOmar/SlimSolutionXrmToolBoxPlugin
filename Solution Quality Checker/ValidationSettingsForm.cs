@@ -31,10 +31,8 @@ namespace Solution_Quality_Checker
 
         private void MapCheckboxesToSettings()
         {
-            ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"] = lstSettings.GetItemChecked(0);
-            ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckProcesses"] = lstSettings.GetItemChecked(1);
-            ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckPublishers"] = lstSettings.GetItemChecked(2);
-            ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckCode"] = lstSettings.GetItemChecked(3);
+            AppSettings.ValidationSettings[0].Value = lstSettings.GetItemChecked(0);
+            AppSettings.ValidationSettings[1].Value = lstSettings.GetItemChecked(1);
         }
 
         private void MapSettingsToCheckboxes()
@@ -43,23 +41,14 @@ namespace Solution_Quality_Checker
             for (int i = 0; i < lstSettings.Items.Count; i++)
                 lstSettings.SetItemChecked(i, true);
 
-            if (!ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"])
+            if (!AppSettings.ValidationSettings[0].Value)
             {
                 lstSettings.SetItemChecked(0, false);
             }
-            if (!ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckProcesses"])
+            if (!AppSettings.ValidationSettings[1].Value)
             {
                 lstSettings.SetItemChecked(1, false);
             }
-            if (!ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckPublishers"])
-            {
-                lstSettings.SetItemChecked(2, false);
-            }
-            if (!ValidationSettings.CurrentValidationSettings.SettingsKVPs["CheckCode"])
-            {
-                lstSettings.SetItemChecked(3, false);
-            }
-
         }
         private void BtnSaveSettings_Click(object sender, EventArgs e)
         {
