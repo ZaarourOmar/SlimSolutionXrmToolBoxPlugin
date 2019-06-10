@@ -24,7 +24,7 @@ namespace Solution_Quality_Checker
         {
             CRMService = service;
             HealthIssues = new ValidationResults();
-            Validators = Validator.GetValidators(CRMService, CurrentValidationSettings);
+            Validators = GetValidators();
         }
 
         public ValidationResults Validate(CRMSolution solution)
@@ -53,7 +53,20 @@ namespace Solution_Quality_Checker
 
             return finalResults;
         }
+        public List<IValidator> GetValidators()
+        {
+            List<IValidator> validators = new List<IValidator>();
+            if (CurrentValidationSettings.SettingsKVPs["CheckEntityComponents"])
+            {
+                validators.Add(new ComponentsValidator(CRMService));
+            }
+            if (CurrentValidationSettings.SettingsKVPs["CheckProcesses"])
+            {
+                validators.Add(new ProcessValidator(CRMService));
+            }
 
+            return validators;
+        }
     }
 
     public class PartialResultsEventArgs

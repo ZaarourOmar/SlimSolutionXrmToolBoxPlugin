@@ -11,17 +11,20 @@ using Solution_Quality_Checker.Models;
 
 namespace Solution_Quality_Checker.Validators
 {
-    public class ProcessValidator : Validator
+    public class ProcessValidator : IValidator
     {
-        public ProcessValidator(IOrganizationService service) : base(service)
+        public ProcessValidator(IOrganizationService service)
         {
+            CRMService = service;
         }
-        public override string Message => "Checking Processes";
+        public string Message => "Checking Processes";
 
-        public override event EventHandler<ErrorEventArgs> OnValidatorError;
-        public override event EventHandler<ProgressEventArgs> OnValidatorProgress;
+        public IOrganizationService CRMService { get; set; }
 
-        public override ValidationResults Validate(CRMSolution solution)
+        public event EventHandler<ErrorEventArgs> OnValidatorError;
+        public event EventHandler<ProgressEventArgs> OnValidatorProgress;
+
+        public ValidationResults Validate(CRMSolution solution)
         {
             try
             {
@@ -41,7 +44,7 @@ namespace Solution_Quality_Checker.Validators
 
                 return results;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 OnValidatorError?.Invoke(this, new ErrorEventArgs(ex));
                 return null;

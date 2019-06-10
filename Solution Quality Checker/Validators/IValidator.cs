@@ -12,6 +12,7 @@ namespace Solution_Quality_Checker.Validators
 
         IOrganizationService CRMService { get; set; }
         string Message { get; }
+
         ValidationResults Validate(CRMSolution solution);
     }
 
