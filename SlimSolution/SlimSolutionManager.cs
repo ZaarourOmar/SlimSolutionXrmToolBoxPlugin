@@ -60,7 +60,8 @@ namespace SlimSolution
                     OnProgressChanged?.Invoke(s, new ProgressEventArgs(validator.Message + ":" + e.Message));
                 };
 
-                ValidationResults results = validator.Validate(solution);
+                List<CRMSolutionComponent> extraComponents = new List<CRMSolutionComponent>();
+                ValidationResults results = validator.Validate(solution, out extraComponents);
                 finalResults.AddResultSet(results);
             }
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xrm.Sdk;
 using SlimSolution.Models;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SlimSolution.Validators
@@ -13,7 +14,7 @@ namespace SlimSolution.Validators
         IOrganizationService CRMService { get; set; }
         string Message { get; }
 
-        ValidationResults Validate(CRMSolution solution);
+        ValidationResults Validate(CRMSolution solution, out List<CRMSolutionComponent> extraComponents);
     }
 
     public class ErrorEventArgs : EventArgs

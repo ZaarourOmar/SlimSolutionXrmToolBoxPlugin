@@ -24,7 +24,7 @@ namespace SlimSolution
         {
             new SerializableKeyValuePair<string, bool>("CheckComponents", true),
             new SerializableKeyValuePair<string, bool>("CheckProcesses", true),
-            new SerializableKeyValuePair<string, bool>("ALWAYSPUBLISH", true)
+            new SerializableKeyValuePair<string, bool>("ALWAYSPUBLISH", false)
         };
         public SerializableKeyValuePair<string, bool>[] ValidationSettings { get => _validationSettingsKVPs; set => _validationSettingsKVPs = value; }
     }

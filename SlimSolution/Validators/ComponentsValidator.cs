@@ -32,12 +32,13 @@ namespace SlimSolution.Validators
             CRMService = service;
         }
 
-        public ValidationResults Validate(CRMSolution solution)
+        public ValidationResults Validate(CRMSolution solution, out List<CRMSolutionComponent> extraComponents)
         {
             ValidationResults validatorResults = new ValidationResults();
             List<RetrieveEntityResponse> solutionEntities = GetAllEntitiesInTheSolution(solution);
             ValidationResults results = ValidateManagedSolutionComponents(solution, solutionEntities);
             validatorResults.AddResultSet(results);
+            extraComponents = null;
             return validatorResults;
 
         }
@@ -63,8 +64,10 @@ namespace SlimSolution.Validators
                     RetrieveAsIfPublished = true,
 
                 };
+
                 RetrieveEntityResponse entityResponse = (RetrieveEntityResponse)CRMService.Execute(entityRequest);
-                allEntities.Add(entityResponse);
+                if (!entityResponse.EntityMetadata.IsCustomEntity.Value) // we only care about managed entities for now
+                    allEntities.Add(entityResponse);
             }
 
             return allEntities;
@@ -141,7 +144,7 @@ namespace SlimSolution.Validators
             Dictionary<string, List<XElement>> formCollections = new Dictionary<string, List<XElement>>();
             foreach (var entity in entities)
             {
-                if (!entity.Element("Name").Value.Contains("_") && entity.Descendants("systemform") != null) // we need only system entities tht have no publishers
+                if (!entity.Element("Name").Value.Contains("_") && entity.Descendants("systemform") != null)
                     formCollections[entity.Element("Name").Value] = (from x in entity.Descendants("systemform") select x).ToList<XElement>();
             }
 
@@ -178,7 +181,7 @@ namespace SlimSolution.Validators
             Dictionary<string, List<XElement>> viewsCollections = new Dictionary<string, List<XElement>>();
             foreach (var entity in entities)
             {
-                if (!entity.Element("Name").Value.Contains("_")) // we need only system entities tht have no publishers
+                if (!entity.Element("Name").Value.Contains("_") && entity.Descendants("savedquery") != null)
                     viewsCollections[entity.Element("Name").Value] = (from x in entity.Descendants("savedquery") select x).ToList<XElement>();
             }
 
@@ -215,7 +218,7 @@ namespace SlimSolution.Validators
             Dictionary<string, List<XElement>> attributesCollections = new Dictionary<string, List<XElement>>();
             foreach (var entity in entities)
             {
-                if (!entity.Element("Name").Value.Contains("_")) // we need only system entities tht have no publishers
+                if (!entity.Element("Name").Value.Contains("_") && entity.Descendants("attribute") != null)
                     attributesCollections[entity.Element("Name").Value] = (from x in entity.Descendants("attribute") select x).ToList<XElement>();
             }
 

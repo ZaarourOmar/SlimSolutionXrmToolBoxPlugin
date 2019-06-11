@@ -30,7 +30,7 @@ namespace SlimSolution.Validators
 
 
 
-        public ValidationResults Validate(CRMSolution solution)
+        public ValidationResults Validate(CRMSolution solution, out List<CRMSolutionComponent> extraComponents)
         {
             try
             {
@@ -48,11 +48,13 @@ namespace SlimSolution.Validators
                     results = ValidateProcesses(allProcesses.Entities);
                 }
 
+                extraComponents = null;
                 return results;
             }
             catch (Exception ex)
             {
                 OnValidatorError?.Invoke(this, new ErrorEventArgs(ex));
+                extraComponents = null;
                 return null;
             }
 
