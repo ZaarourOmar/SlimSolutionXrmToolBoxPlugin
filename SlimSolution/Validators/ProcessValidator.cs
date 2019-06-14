@@ -23,14 +23,17 @@ namespace SlimSolution.Validators
         public IOrganizationService CRMService { get; set; }
         public string Message { get { return "Checking Processes"; } }
 
-        public ProcessValidator(IOrganizationService service)
+        public CRMSolution Solution { get; set; }
+
+        public ProcessValidator(IOrganizationService service, CRMSolution solution)
         {
             CRMService = service;
+            Solution = solution;
         }
 
 
 
-        public ValidationResults Validate(CRMSolution solution, out List<CRMSolutionComponent> extraComponents)
+        public ValidationResults Validate()
         {
             try
             {
@@ -39,22 +42,19 @@ namespace SlimSolution.Validators
                 //get all solution compontents of type workflow that belong to the specified solution
                 QueryExpression processQuery = new QueryExpression("solutioncomponent");
                 processQuery.ColumnSet = new ColumnSet(true);
-                processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, Constants.PROCESS_COMPONENT_TYPE);
-                processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, solution.Id);
+                processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, (int)SolutionComponentType.Process);
+                processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, Solution.Id);
 
                 var allProcesses = CRMService.RetrieveMultiple(processQuery);
                 if (allProcesses != null && allProcesses.Entities.Count > 0)
                 {
                     results = ValidateProcesses(allProcesses.Entities);
                 }
-
-                extraComponents = null;
                 return results;
             }
             catch (Exception ex)
             {
                 OnValidatorError?.Invoke(this, new ErrorEventArgs(ex));
-                extraComponents = null;
                 return null;
             }
 
@@ -88,8 +88,7 @@ namespace SlimSolution.Validators
                     var singleResult = new ValidationResult();
                     singleResult.Description = $"{fullProcess.GetAttributeValue<string>("name")} is not activated";
                     singleResult.Suggestions = $"Inactive processes should be removed from unmanaged solutions";
-                    singleResult.PriorityLevel = ValidationResultLevel.Medium;
-                    singleResult.Type = fullProcess.FormattedValues["category"];
+                    singleResult.Regarding = fullProcess.FormattedValues["category"];
                     results.AddResult(singleResult);
                 }
             }

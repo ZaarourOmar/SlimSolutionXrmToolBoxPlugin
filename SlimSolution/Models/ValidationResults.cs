@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace SlimSolution.Models
 {
-    public enum ValidationResultLevel
-    {
-        None, Low, Medium, High
-    }
-
+ 
+    /// <summary>
+    /// This class holds the list of issues that are found in a solution. 
+    /// </summary>
     public class ValidationResults
     {
         public ValidationResults()
@@ -45,13 +44,15 @@ namespace SlimSolution.Models
     {
         public ValidationResult()
         {
-            Id = Guid.NewGuid();
-            PriorityLevel = ValidationResultLevel.None;
+            IDs = new List<Guid>();
+            LogicalNames = new List<string>();
         }
-        public Guid Id { get; set; }
+        public List<Guid> IDs { get; set; }
         public string Description { get; set; }
         public string Suggestions { get; set; }
-        public ValidationResultLevel PriorityLevel { get; set; }
-        public string Type { get; set; }
+        public string Regarding { get; set; }
+        public string EntityLogicalName { get; set; }
+        public SolutionComponentType SolutionComponentType { get; set; }
+        public List<string> LogicalNames { get; set; }
     }
 }

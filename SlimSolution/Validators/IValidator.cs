@@ -11,10 +11,11 @@ namespace SlimSolution.Validators
         event EventHandler<ErrorEventArgs> OnValidatorError;
         event EventHandler<ProgressEventArgs> OnValidatorProgress;
 
+        CRMSolution Solution { get; set; }
         IOrganizationService CRMService { get; set; }
         string Message { get; }
 
-        ValidationResults Validate(CRMSolution solution, out List<CRMSolutionComponent> extraComponents);
+        ValidationResults Validate();
     }
 
     public class ErrorEventArgs : EventArgs

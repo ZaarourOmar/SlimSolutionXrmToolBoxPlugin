@@ -29,21 +29,21 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SQCControl));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolStripMenu = new System.Windows.Forms.ToolStrip();
             this.tsbClose = new System.Windows.Forms.ToolStripButton();
             this.tssSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.btnLoadSolutions = new System.Windows.Forms.ToolStripButton();
             this.btnCheckSolution = new System.Windows.Forms.ToolStripButton();
+            this.btnWhyThisTool = new System.Windows.Forms.ToolStripButton();
             this.btnSettings = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lstSolutions = new System.Windows.Forms.ListBox();
             this.gvResults = new System.Windows.Forms.DataGridView();
             this.Type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Suggestions = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Level = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnRemoveExtraComponents = new System.Windows.Forms.ToolStripButton();
             this.toolStripMenu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -60,8 +60,9 @@
             this.tssSeparator1,
             this.btnLoadSolutions,
             this.btnCheckSolution,
+            this.btnWhyThisTool,
             this.btnSettings,
-            this.btnRemoveExtraComponents});
+            this.toolStripSeparator1});
             this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMenu.Name = "toolStripMenu";
             this.toolStripMenu.Size = new System.Drawing.Size(981, 25);
@@ -102,6 +103,19 @@
             this.btnCheckSolution.Text = "Check Solution";
             this.btnCheckSolution.Click += new System.EventHandler(this.btnCheckSolution_Click);
             // 
+            // btnWhyThisTool
+            // 
+            this.btnWhyThisTool.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.btnWhyThisTool.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.btnWhyThisTool.Image = ((System.Drawing.Image)(resources.GetObject("btnWhyThisTool.Image")));
+            this.btnWhyThisTool.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnWhyThisTool.Name = "btnWhyThisTool";
+            this.btnWhyThisTool.Size = new System.Drawing.Size(86, 22);
+            this.btnWhyThisTool.Text = "Why this tool?";
+            this.btnWhyThisTool.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
+            this.btnWhyThisTool.ToolTipText = "Why this tool?";
+            this.btnWhyThisTool.Click += new System.EventHandler(this.btnWhyThisTool_Click);
+            // 
             // btnSettings
             // 
             this.btnSettings.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -112,6 +126,11 @@
             this.btnSettings.Size = new System.Drawing.Size(97, 22);
             this.btnSettings.Text = "Change Settings";
             this.btnSettings.Click += new System.EventHandler(this.BtnSettings_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 25);
             // 
             // splitContainer1
             // 
@@ -151,15 +170,14 @@
             this.gvResults.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Type,
             this.Description,
-            this.Suggestions,
-            this.Level});
+            this.Suggestions});
             this.gvResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gvResults.Location = new System.Drawing.Point(0, 0);
             this.gvResults.Name = "gvResults";
             this.gvResults.ReadOnly = true;
             this.gvResults.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToAllHeaders;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gvResults.RowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gvResults.RowsDefaultCellStyle = dataGridViewCellStyle1;
             this.gvResults.Size = new System.Drawing.Size(782, 516);
             this.gvResults.TabIndex = 1;
             // 
@@ -185,24 +203,6 @@
             this.Suggestions.MinimumWidth = 6;
             this.Suggestions.Name = "Suggestions";
             this.Suggestions.ReadOnly = true;
-            // 
-            // Level
-            // 
-            this.Level.HeaderText = "Level";
-            this.Level.MinimumWidth = 6;
-            this.Level.Name = "Level";
-            this.Level.ReadOnly = true;
-            // 
-            // btnRemoveExtraComponents
-            // 
-            this.btnRemoveExtraComponents.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.btnRemoveExtraComponents.Image = ((System.Drawing.Image)(resources.GetObject("btnRemoveExtraComponents.Image")));
-            this.btnRemoveExtraComponents.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.btnRemoveExtraComponents.Name = "btnRemoveExtraComponents";
-            this.btnRemoveExtraComponents.Size = new System.Drawing.Size(154, 22);
-            this.btnRemoveExtraComponents.Text = "Remove Extra Components";
-            this.btnRemoveExtraComponents.Visible = false;
-            this.btnRemoveExtraComponents.Click += new System.EventHandler(this.btnRemoveExtraComponents_Click);
             // 
             // SQCControl
             // 
@@ -239,7 +239,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn Type;
         private System.Windows.Forms.DataGridViewTextBoxColumn Description;
         private System.Windows.Forms.DataGridViewTextBoxColumn Suggestions;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Level;
-        private System.Windows.Forms.ToolStripButton btnRemoveExtraComponents;
+        private System.Windows.Forms.ToolStripButton btnWhyThisTool;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }

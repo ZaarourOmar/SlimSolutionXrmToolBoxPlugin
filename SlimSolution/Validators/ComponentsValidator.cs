@@ -26,55 +26,23 @@ namespace SlimSolution.Validators
         public IOrganizationService CRMService { get; set; }
         public string Message { get { return "Checking Forms, Views and Attributes"; } }
 
-
-        public ComponentsValidator(IOrganizationService service)
+        public CRMSolution Solution { get; set; }
+        public ValidationResults AllResults { get; set; }
+        public ComponentsValidator(IOrganizationService service, CRMSolution solution)
         {
             CRMService = service;
+            Solution = solution;
+            AllResults = new ValidationResults();
         }
 
-        public ValidationResults Validate(CRMSolution solution, out List<CRMSolutionComponent> extraComponents)
+        public ValidationResults Validate()
         {
-            ValidationResults validatorResults = new ValidationResults();
-            List<RetrieveEntityResponse> solutionEntities = GetAllEntitiesInTheSolution(solution);
-            ValidationResults results = ValidateManagedSolutionComponents(solution, solutionEntities);
-            validatorResults.AddResultSet(results);
-            extraComponents = null;
-            return validatorResults;
+            ValidationResults results = ValidateManagedSolutionComponents();
+            return results;
 
         }
 
-        private List<RetrieveEntityResponse> GetAllEntitiesInTheSolution(CRMSolution solution)
-        {
-            // get all solution entities 
-            QueryExpression processQuery = new QueryExpression("solutioncomponent");
-            processQuery.ColumnSet = new ColumnSet(true);
-            processQuery.Criteria.AddCondition("componenttype", ConditionOperator.Equal, Constants.ENTITY_COMPONENT_TYPE);
-            processQuery.Criteria.AddCondition("solutionid", ConditionOperator.Equal, solution.Id);
-            var components = CRMService.RetrieveMultiple(processQuery);
-
-
-            // request each entity data separately and add it to a list
-            List<RetrieveEntityResponse> allEntities = new List<RetrieveEntityResponse>();
-            foreach (var componentEntity in components.Entities)
-            {
-                RetrieveEntityRequest entityRequest = new RetrieveEntityRequest
-                {
-                    EntityFilters = EntityFilters.All,
-                    MetadataId = componentEntity.GetAttributeValue<Guid>("objectid"),
-                    RetrieveAsIfPublished = true,
-
-                };
-
-                RetrieveEntityResponse entityResponse = (RetrieveEntityResponse)CRMService.Execute(entityRequest);
-                if (!entityResponse.EntityMetadata.IsCustomEntity.Value) // we only care about managed entities for now
-                    allEntities.Add(entityResponse);
-            }
-
-            return allEntities;
-
-        }
-
-        private ValidationResults ValidateManagedSolutionComponents(CRMSolution solution, List<RetrieveEntityResponse> managedEntities)
+        private ValidationResults ValidateManagedSolutionComponents()
         {
 
             ValidationResults results = new ValidationResults();
@@ -82,27 +50,27 @@ namespace SlimSolution.Validators
             // export the solution as managed and extract it to get the customizations xml
             ExportSolutionRequest exportRequest = new ExportSolutionRequest();
             exportRequest.Managed = true;
-            exportRequest.SolutionName = solution.UniqueName;
+            exportRequest.SolutionName = Solution.UniqueName;
             OnValidatorProgress?.Invoke(this, new ProgressEventArgs("Exporting solution as managed"));
             ExportSolutionResponse managedResponse = CRMService.Execute(exportRequest) as ExportSolutionResponse;
             if (managedResponse != null)
             {
                 try
                 {
-                    string zipFileName = solution.UniqueName + ".zip";
-                    string customiationXmlPath = Constants.APP_DATA_DIRECTOY_NAME + "\\customizations.xml";
-                    string zipPath = Constants.APP_DATA_DIRECTOY_NAME + zipFileName;
+                    string zipFileName = Solution.UniqueName + ".zip";
+                    string customiationXmlPath = Constants.APP_DATA_TEMP_DIRECTOY_PATH + "\\customizations.xml";
+                    string zipPath = Constants.APP_DATA_TEMP_DIRECTOY_PATH + zipFileName;
 
                     // cleanup an existing directory files
-                    if (Directory.Exists(Constants.APP_DATA_DIRECTOY_NAME))
+                    if (Directory.Exists(Constants.APP_DATA_TEMP_DIRECTOY_PATH))
                     {
-                        Directory.Delete(Constants.APP_DATA_DIRECTOY_NAME, true);
+                        Directory.Delete(Constants.APP_DATA_TEMP_DIRECTOY_PATH, true);
                     }
 
                     // recreate the directory
-                    if (!Directory.Exists(Constants.APP_DATA_DIRECTOY_NAME))
+                    if (!Directory.Exists(Constants.APP_DATA_TEMP_DIRECTOY_PATH))
                     {
-                        Directory.CreateDirectory(Constants.APP_DATA_DIRECTOY_NAME);
+                        Directory.CreateDirectory(Constants.APP_DATA_TEMP_DIRECTOY_PATH);
                     }
 
                     // write the managed solution as a zip file in the directory
@@ -111,7 +79,7 @@ namespace SlimSolution.Validators
 
                     // extract the zip file to get the customizations.xml file content
                     OnValidatorProgress?.Invoke(this, new ProgressEventArgs("Extracting Managed Solution"));
-                    ZipFile.ExtractToDirectory(zipPath, Constants.APP_DATA_DIRECTOY_NAME);
+                    ZipFile.ExtractToDirectory(zipPath, Constants.APP_DATA_TEMP_DIRECTOY_PATH);
 
 
                     //at this point customization.xml file should be ready, load it into an xdocument object
@@ -120,32 +88,38 @@ namespace SlimSolution.Validators
                         OnValidatorProgress?.Invoke(this, new ProgressEventArgs("Checking the Customization File"));
 
                         XDocument customizationsXml = XDocument.Load(customiationXmlPath);
-                        results.AddResultSet(CheckAttributes(customizationsXml, managedEntities));
-                        results.AddResultSet(CheckViews(customizationsXml, managedEntities));
-                        results.AddResultSet(CheckForms(customizationsXml, managedEntities));
+                        results.AddResultSet(CheckAttributes(customizationsXml));
+                        results.AddResultSet(CheckViews(customizationsXml));
+                        results.AddResultSet(CheckForms(customizationsXml));
                     }
 
                 }
 
-                catch (IOException ex)
+                catch (IOException ioEx)
                 {
                     // fire an error to be catched by whoever is listening to the OnValidationError Event
-                    OnValidatorError?.Invoke(this, new ErrorEventArgs(ex));
+                    OnValidatorError?.Invoke(this, new ErrorEventArgs(ioEx));
+                    throw ioEx;
                 }
-
+                catch (Exception ex)
+                {
+                    OnValidatorError?.Invoke(this, new ErrorEventArgs(ex));
+                    throw ex;
+                }
             }
             return results;
         }
 
-        private ValidationResults CheckForms(XDocument customizationsXml, List<RetrieveEntityResponse> managedEntities)
+        private ValidationResults CheckForms(XDocument customizationsXml)
         {
             ValidationResults results = new ValidationResults();
-            var entities = (from c in customizationsXml.Descendants("Entity") select c).Distinct();
+            var entitiesXml = (from c in customizationsXml.Descendants("Entity") select c).Distinct();
             Dictionary<string, List<XElement>> formCollections = new Dictionary<string, List<XElement>>();
-            foreach (var entity in entities)
+            foreach (var entityXml in entitiesXml)
             {
-                if (!entity.Element("Name").Value.Contains("_") && entity.Descendants("systemform") != null)
-                    formCollections[entity.Element("Name").Value] = (from x in entity.Descendants("systemform") select x).ToList<XElement>();
+                if (entityXml.Element("EntityInfo") != null && entityXml.Element("EntityInfo").Element("entity") != null)
+                    if (!entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value.Contains("_") && entityXml.Descendants("systemform") != null)
+                        formCollections[entityXml.Descendants("EntitySetName").ElementAt(0).Value] = (from x in entityXml.Descendants("systemform") select x).ToList<XElement>();
             }
 
             foreach (var formCollection in formCollections)
@@ -158,31 +132,37 @@ namespace SlimSolution.Validators
                     foreach (XElement formElement in formCollection.Value)
                     {
                         if (formElement.Descendants("LocalizedName") != null)
+                        {
                             stringBuilder.Append(formElement.Descendants("LocalizedName").ElementAt(0).Attribute("description").Value + ",   \n");
+                            result.IDs.Add(new Guid(formElement.Element("formid").Value));
+                        }
                     }
 
                     if (formCollections.Count > 0)
                     {
+                        result.SolutionComponentType = SolutionComponentType.Form;
+                        result.EntityLogicalName = formCollection.Key;
                         result.Description = stringBuilder.ToString();
                         result.Suggestions = "Try to have only the needed forms in the solution. Any custom form or a modified managed form are good to be in the solution but nothing else.";
-                        result.Type = formCollection.Key + " " + "Entity Forms";
-                        result.PriorityLevel = ValidationResultLevel.Medium;
+                        result.Regarding = formCollection.Key + " " + "Entity Forms";
                         results.AddResult(result);
                     }
                 }
             }
+            AllResults.AddResultSet(results);
             return results;
         }
 
-        private ValidationResults CheckViews(XDocument customizationsXml, List<RetrieveEntityResponse> managedEntities)
+        private ValidationResults CheckViews(XDocument customizationsXml)
         {
             ValidationResults results = new ValidationResults();
-            var entities = (from c in customizationsXml.Descendants("Entity") select c).Distinct();
+            var entitiesXml = (from c in customizationsXml.Descendants("Entity") select c).Distinct();
             Dictionary<string, List<XElement>> viewsCollections = new Dictionary<string, List<XElement>>();
-            foreach (var entity in entities)
+            foreach (var entityXml in entitiesXml)
             {
-                if (!entity.Element("Name").Value.Contains("_") && entity.Descendants("savedquery") != null)
-                    viewsCollections[entity.Element("Name").Value] = (from x in entity.Descendants("savedquery") select x).ToList<XElement>();
+                if (entityXml.Element("EntityInfo") != null && entityXml.Element("EntityInfo").Element("entity") != null)
+                    if (!entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value.Contains("_") && entityXml.Descendants("savedquery") != null)
+                        viewsCollections[entityXml.Descendants("EntitySetName").ElementAt(0).Value] = (from x in entityXml.Descendants("savedquery") select x).ToList<XElement>();
             }
 
             foreach (var viewCollection in viewsCollections)
@@ -195,31 +175,39 @@ namespace SlimSolution.Validators
                     foreach (XElement viewElement in viewCollection.Value)
                     {
                         if (viewElement.Descendants("LocalizedName") != null)
+                        {
                             stringBuilder.Append(viewElement.Descendants("LocalizedName").ElementAt(0).Attribute("description").Value + ",   \n");
+                            result.IDs.Add(new Guid(viewElement.Element("savedqueryid").Value));
+                        }
                     }
 
                     if (viewsCollections.Count > 0)
                     {
+                        result.EntityLogicalName = viewCollection.Key;
+                        result.SolutionComponentType = SolutionComponentType.View;
                         result.Description = stringBuilder.ToString();
                         result.Suggestions = "Try to have only the needed views in the solution. Any custom views or a modified managed views are good to be in the solution but nothing else.";
-                        result.Type = viewCollection.Key + " " + "Entity Views";
-                        result.PriorityLevel = ValidationResultLevel.Medium;
+                        result.Regarding = viewCollection.Key + " " + "Entity Views";
                         results.AddResult(result);
                     }
                 }
             }
+
+            AllResults.AddResultSet(results);
+
             return results;
         }
 
-        private ValidationResults CheckAttributes(XDocument customizationsXml, List<RetrieveEntityResponse> managedEntities)
+        private ValidationResults CheckAttributes(XDocument customizationsXml)
         {
             ValidationResults results = new ValidationResults();
-            var entities = (from c in customizationsXml.Descendants("Entity") select c).Distinct();
+            var entitiesXml = (from c in customizationsXml.Descendants("Entity") select c).Distinct();
             Dictionary<string, List<XElement>> attributesCollections = new Dictionary<string, List<XElement>>();
-            foreach (var entity in entities)
+            foreach (var entityXml in entitiesXml)
             {
-                if (!entity.Element("Name").Value.Contains("_") && entity.Descendants("attribute") != null)
-                    attributesCollections[entity.Element("Name").Value] = (from x in entity.Descendants("attribute") select x).ToList<XElement>();
+                if (entityXml.Element("EntityInfo") != null && entityXml.Element("EntityInfo").Element("entity") != null)
+                    if (!entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value.Contains("_") && entityXml.Descendants("attribute") != null)
+                        attributesCollections[entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value] = (from x in entityXml.Descendants("attribute") select x).ToList<XElement>();
             }
 
             foreach (var attCollection in attributesCollections)
@@ -229,22 +217,29 @@ namespace SlimSolution.Validators
                     StringBuilder s = new StringBuilder();
                     Models.ValidationResult result = new Models.ValidationResult();
                     s.Append("Only add these fields to the solution:\n\n");
-                    foreach (XElement element in attCollection.Value)
+                    foreach (XElement attElement in attCollection.Value)
                     {
-                        if (element.Attribute("PhysicalName") != null && element.Descendants("displayname") != null)
-                            s.Append($"{element.Descendants("displayname").ElementAt(0).Attribute("description").Value} ({ element.Attribute("PhysicalName").Value}),   \n");
+                        if (attElement.Attribute("PhysicalName") != null && attElement.Descendants("displayname") != null)
+                        {
+                            s.Append($"{attElement.Descendants("displayname").ElementAt(0).Attribute("description").Value} ({ attElement.Attribute("PhysicalName").Value}),   \n");
+                            result.LogicalNames.Add(attElement.Element("LogicalName").Value);
+                        }
                     }
                     if (attributesCollections.Count > 0)
                     {
+                        result.EntityLogicalName = attCollection.Key;
+                        result.SolutionComponentType = SolutionComponentType.Attribute;
                         result.Description = s.ToString();
                         result.Suggestions = "Try to have only the needed fields in the solution. Any custom field or a modified managed field are good to be in the solution but nothing else.";
-                        result.Type = attCollection.Key + " " + "Entity Fields";
-                        result.PriorityLevel = ValidationResultLevel.Medium;
+                        result.Regarding = attCollection.Key + " " + "Entity Fields";
                         results.AddResult(result);
                     }
                 }
             }
+
+            AllResults.AddResultSet(results);
             return results;
         }
+
     }
 }

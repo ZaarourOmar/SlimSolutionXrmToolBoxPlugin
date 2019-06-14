@@ -13,7 +13,11 @@ namespace SlimSolution
 {
     public partial class SQCControl : PluginControlBase
     {
+
         private Settings mySettings;
+        SlimSolutionManager slimSolutionManager;
+        CRMSolution crmSolution;
+        IEnumerable<Entity> solutionEntities = new List<Entity>();
 
         public SQCControl()
         {
@@ -56,7 +60,7 @@ namespace SlimSolution
             }
             catch (Exception ex)
             {
-
+                LogError("An error happened while saving the settings.");
             }
         }
 
@@ -74,8 +78,6 @@ namespace SlimSolution
             }
         }
 
-
-        IEnumerable<Entity> originalSolutions = new List<Entity>();
         private void btnLoadSolutions_Click(object sender, EventArgs e)
         {
 
@@ -97,24 +99,26 @@ namespace SlimSolution
                 {
                     if (args.Error != null)
                     {
+                        LogError("An error happend while loading the solutions.", args.Error);
                         MessageBox.Show(args.Error.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     var result = args.Result as EntityCollection;
                     if (result != null)
                     {
-                        originalSolutions = result.Entities.ToList();
+                        solutionEntities = result.Entities.ToList();
                         foreach (Entity solution in result.Entities)
                         {
                             ListBoxItem lstItem = new ListBoxItem();
-                            if (solution.GetAttributeValue<string>("friendlyname") == "Active Solution" || solution.GetAttributeValue<string>("friendlyname") == "Base Solution" || solution.GetAttributeValue<string>("friendlyname") == "Default Solution")
-                                return;
+                            if (solution.GetAttributeValue<string>("uniquename") == "Active" || solution.GetAttributeValue<string>("uniquename") == "Default" || solution.GetAttributeValue<string>("uniquename") == "Basic")
+                                continue;
 
                             lstItem.Name = solution.GetAttributeValue<string>("uniquename");
                             lstItem.Content = solution.GetAttributeValue<string>("friendlyname");
                             lstSolutions.Items.Add(lstItem);
                         }
                     }
-                }
+                },
+
             });
         }
 
@@ -140,43 +144,43 @@ namespace SlimSolution
             settingsForm.ShowDialog();
         }
 
-        SlimSolutionManager slimSolutionManager;
-        CRMSolution crmSolution;
-
         private void btnCheckSolution_Click(object sender, EventArgs e)
         {
-            slimSolutionManager = new SlimSolutionManager(Service, mySettings);
 
             var selectedSolutionItem = lstSolutions.SelectedItem as ListBoxItem;
             if (selectedSolutionItem != null)
             {
-                Entity solutionRecord = originalSolutions.FirstOrDefault(x => x.GetAttributeValue<string>("uniquename") == selectedSolutionItem.Name);
+
+                Entity solutionRecord = solutionEntities.FirstOrDefault(x => x.GetAttributeValue<string>("uniquename") == selectedSolutionItem.Name);
                 crmSolution = new CRMSolution(solutionRecord);
-                ValidationResults finalResults = new ValidationResults();
+                slimSolutionManager = new SlimSolutionManager(Service, crmSolution, mySettings);
+                ValidationResults finalResultsAndIssues = new ValidationResults();
                 gvResults.Rows.Clear();
                 WorkAsync(new WorkAsyncInfo
                 {
-                    Message = "Checking solution health ... ",
+                    Message = "Checking solution components ... ",
 
                     Work = (worker, args) =>
                     {
+
                         slimSolutionManager.OnProgressChanged += (source, progressArgs) =>
                         {
                             worker.ReportProgress(0, progressArgs.Message);
                         };
-                        finalResults = slimSolutionManager.Validate(crmSolution);
+                        finalResultsAndIssues = slimSolutionManager.Validate(crmSolution);
                     },
                     PostWorkCallBack = (args) =>
                     {
                         if (args.Error != null)
                         {
+                            LogError("An error happened while checking the solution.", args.Error);
                             MessageBox.Show(args.Error.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
                         // bind the finalResults here
-                        foreach (Models.ValidationResult vr in finalResults.ResultRecords)
+                        foreach (Models.ValidationResult vr in finalResultsAndIssues.ResultRecords)
                         {
-                            gvResults.Rows.Add(vr.Type, vr.Description, vr.Suggestions, vr.PriorityLevel);
+                            gvResults.Rows.Add(vr.Regarding, vr.Description, vr.Suggestions);
                         }
                     },
                     ProgressChanged = (progressArgs) =>
@@ -192,15 +196,9 @@ namespace SlimSolution
             }
         }
 
-        private void btnRemoveExtraComponents_Click(object sender, EventArgs e)
+        private void btnWhyThisTool_Click(object sender, EventArgs e)
         {
-            if (slimSolutionManager != null && slimSolutionManager.Results != null && crmSolution != null)
-            {
-                if (MessageBox.Show("This process will remove all the uneeded attributes, forms and views from the selected solution, continue?") == DialogResult.OK)
-                {
-                    slimSolutionManager.RemoveExtraComponents(crmSolution);
-                }
-            }
+            MessageBox.Show(Constants.WHY_THIS_TOOL_TEXT, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

@@ -20,10 +20,11 @@ namespace SlimSolution
         public ValidationResults Results { get; set; }
         public List<IValidator> Validators { get; set; }
         public Settings MySettings { get; set; }
-        public List<CRMSolutionComponent> ExtraComponents { get; set; }
 
-        public SlimSolutionManager(IOrganizationService service, Settings mySettings)
+        public CRMSolution Solution { get; set; }
+        public SlimSolutionManager(IOrganizationService service, CRMSolution solution, Settings mySettings)
         {
+            Solution = solution;
             CRMService = service;
             MySettings = mySettings;
             Results = new ValidationResults();
@@ -57,11 +58,11 @@ namespace SlimSolution
                 };
                 validator.OnValidatorProgress += (s, e) =>
                 {
-                    OnProgressChanged?.Invoke(s, new ProgressEventArgs(validator.Message + ":" + e.Message));
+                    OnProgressChanged?.Invoke(s, new ProgressEventArgs(e.Message));
                 };
 
                 List<CRMSolutionComponent> extraComponents = new List<CRMSolutionComponent>();
-                ValidationResults results = validator.Validate(solution, out extraComponents);
+                ValidationResults results = validator.Validate();
                 finalResults.AddResultSet(results);
             }
 
@@ -72,33 +73,17 @@ namespace SlimSolution
             List<IValidator> validators = new List<IValidator>();
             if (MySettings.ValidationSettings[0].Value)
             {
-                validators.Add(new ComponentsValidator(CRMService));
+                validators.Add(new ComponentsValidator(CRMService, Solution));
             }
             if (MySettings.ValidationSettings[1].Value)
             {
-                validators.Add(new ProcessValidator(CRMService));
+                validators.Add(new ProcessValidator(CRMService, Solution));
             }
 
             return validators;
         }
 
-        public void RemoveExtraComponents(CRMSolution crmSolution)
-        {
-            if (ExtraComponents != null)
-            {
-                OnProgressChanged?.Invoke(this, new ProgressEventArgs("Removing extra components"));
-                foreach (CRMSolutionComponent component in ExtraComponents)
-                {
-                    RemoveSolutionComponentRequest removereq = new RemoveSolutionComponentRequest();
-                    removereq.SolutionUniqueName = crmSolution.UniqueName;
-                    removereq.ComponentId = component.ID;
-                    CRMService.Execute(removereq);
-                }
-                OnProgressChanged?.Invoke(this, new ProgressEventArgs("Publishing Customizations"));
-                PublishAllXmlRequest publishRequest = new PublishAllXmlRequest();
-                CRMService.Execute(publishRequest);
-            }
-        }
+       
     }
 
     public class PartialResultsEventArgs
