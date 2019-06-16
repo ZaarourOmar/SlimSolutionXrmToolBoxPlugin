@@ -29,6 +29,7 @@ namespace SlimSolution
             MySettings = mySettings;
             Results = new ValidationResults();
             Validators = GetValidators();
+            
         }
 
         public ValidationResults Validate(CRMSolution solution)
@@ -41,10 +42,11 @@ namespace SlimSolution
             }
 
             //publish all customizations first if the settings allow it
-            if (MySettings.ValidationSettings[2].Value)
+            if (MySettings.AlwaysPublish)
             {
                 OnProgressChanged?.Invoke(this, new ProgressEventArgs("Publishing customizations"));
                 PublishAllXmlRequest publishRequest = new PublishAllXmlRequest();
+                
                 CRMService.Execute(publishRequest);
             }
 
@@ -71,11 +73,11 @@ namespace SlimSolution
         public List<IValidator> GetValidators()
         {
             List<IValidator> validators = new List<IValidator>();
-            if (MySettings.ValidationSettings[0].Value)
+            if (MySettings.CheckComponents)
             {
                 validators.Add(new ComponentsValidator(CRMService, Solution));
             }
-            if (MySettings.ValidationSettings[1].Value)
+            if (MySettings.CheckProcesses)
             {
                 validators.Add(new ProcessValidator(CRMService, Solution));
             }
@@ -83,7 +85,7 @@ namespace SlimSolution
             return validators;
         }
 
-       
+
     }
 
     public class PartialResultsEventArgs

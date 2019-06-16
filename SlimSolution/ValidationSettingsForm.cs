@@ -26,16 +26,16 @@ namespace SlimSolution
 
         private void MapCheckboxesToSettings()
         {
-            AppSettings.ValidationSettings[0].Value = lstSettings.GetItemChecked(0);
-            AppSettings.ValidationSettings[1].Value = lstSettings.GetItemChecked(1);
-            AppSettings.ValidationSettings[2].Value = chkBoxAlwaysPublish.Checked;
+            AppSettings.CheckComponents = lstSettings.GetItemChecked(0);
+            AppSettings.CheckProcesses = lstSettings.GetItemChecked(1);
+            AppSettings.AlwaysPublish = chkBoxAlwaysPublish.Checked;
         }
 
         private void MapSettingsToCheckboxes()
         {
-            lstSettings.SetItemChecked(0, AppSettings.ValidationSettings[0].Value);
-            lstSettings.SetItemChecked(1, AppSettings.ValidationSettings[1].Value);
-            chkBoxAlwaysPublish.Checked = AppSettings.ValidationSettings[2].Value;
+            lstSettings.SetItemChecked(0, AppSettings.CheckComponents);
+            lstSettings.SetItemChecked(1, AppSettings.CheckProcesses);
+            chkBoxAlwaysPublish.Checked = AppSettings.AlwaysPublish;
         }
         private void BtnSaveSettings_Click(object sender, EventArgs e)
         {
