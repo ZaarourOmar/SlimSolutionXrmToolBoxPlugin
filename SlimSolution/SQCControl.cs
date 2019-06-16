@@ -19,6 +19,8 @@ namespace SlimSolution
         CRMSolution crmSolution;
         IEnumerable<Entity> solutionEntities = new List<Entity>();
 
+        public bool IsConnected { get; private set; }
+
         public SQCControl()
         {
             InitializeComponent();
@@ -78,9 +80,22 @@ namespace SlimSolution
             }
         }
 
+        protected override void OnConnectionUpdated(ConnectionUpdatedEventArgs e)
+        {
+            base.OnConnectionUpdated(e);
+            IsConnected = true;
+
+            if (e.Service == null)
+            {
+                IsConnected = false;
+            }
+        }
         private void btnLoadSolutions_Click(object sender, EventArgs e)
         {
-
+            if (!IsConnected)
+            {
+                MessageBox.Show("You are not connected to an organization,please connect first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); return;
+            }
             lstSolutions.Items.Clear();
 
             QueryExpression solutionsQuery = new QueryExpression("solution");
@@ -146,7 +161,11 @@ namespace SlimSolution
 
         private void btnCheckSolution_Click(object sender, EventArgs e)
         {
-
+            if (!IsConnected)
+            {
+                MessageBox.Show("You are not connected to an organization,please connect first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             var selectedSolutionItem = lstSolutions.SelectedItem as ListBoxItem;
             if (selectedSolutionItem != null)
             {
@@ -195,6 +214,8 @@ namespace SlimSolution
                 MessageBox.Show("Please select a solution from the list first.");
             }
         }
+
+
 
         private void btnWhyThisTool_Click(object sender, EventArgs e)
         {
