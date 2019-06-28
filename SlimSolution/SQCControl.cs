@@ -41,6 +41,8 @@ namespace SlimSolution
             {
                 LogInfo("Settings found and public List<SerializableKeyValuePair<string, bool>>");
             }
+
+
         }
 
         private void tsbClose_Click(object sender, EventArgs e)
@@ -92,10 +94,11 @@ namespace SlimSolution
         }
         private void btnLoadSolutions_Click(object sender, EventArgs e)
         {
-            if (!IsConnected)
-            {
-                MessageBox.Show("You are not connected to an organization,please connect first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error); return;
-            }
+            ExecuteMethod(LoadSolutions);
+        }
+
+        private void LoadSolutions()
+        {
             lstSolutions.Items.Clear();
 
             QueryExpression solutionsQuery = new QueryExpression("solution");
@@ -136,7 +139,6 @@ namespace SlimSolution
 
             });
         }
-
         private void lstSolutions_SelectedIndexChanged(object sender, EventArgs e)
         {
             var listItem = lstSolutions.SelectedItem;
@@ -161,15 +163,15 @@ namespace SlimSolution
 
         private void btnCheckSolution_Click(object sender, EventArgs e)
         {
-            if (!IsConnected)
-            {
-                MessageBox.Show("You are not connected to an organization,please connect first.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            ExecuteMethod(CheckSolution);
+
+        }
+
+        private void CheckSolution()
+        {
             var selectedSolutionItem = lstSolutions.SelectedItem as ListBoxItem;
             if (selectedSolutionItem != null)
             {
-
                 Entity solutionRecord = solutionEntities.FirstOrDefault(x => x.GetAttributeValue<string>("uniquename") == selectedSolutionItem.Name);
                 crmSolution = new CRMSolution(solutionRecord);
                 slimSolutionManager = new SlimSolutionManager(Service, crmSolution, mySettings);
@@ -196,6 +198,11 @@ namespace SlimSolution
                             MessageBox.Show(args.Error.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
 
+                        if (finalResultsAndIssues.ResultRecords.Count == 0)
+                        {
+                            MessageBox.Show($"The solution is in good state and there is nothing to cleanup");
+                            return;
+                        }
                         // bind the finalResults here
                         foreach (Models.ValidationResult vr in finalResultsAndIssues.ResultRecords)
                         {
@@ -214,8 +221,6 @@ namespace SlimSolution
                 MessageBox.Show("Please select a solution from the list first.");
             }
         }
-
-
 
         private void btnWhyThisTool_Click(object sender, EventArgs e)
         {

@@ -60,12 +60,12 @@
             // 
             this.lstSettings.FormattingEnabled = true;
             this.lstSettings.Items.AddRange(new object[] {
-            "Entity Components",
-            "Processes"});
+            "Entity Components (Check Forms, Attributes and Views)",
+            "Processes (Check Workflows, BPF\'s and Dialogs)"});
             this.lstSettings.Location = new System.Drawing.Point(4, 23);
             this.lstSettings.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lstSettings.Name = "lstSettings";
-            this.lstSettings.Size = new System.Drawing.Size(353, 72);
+            this.lstSettings.Size = new System.Drawing.Size(451, 72);
             this.lstSettings.TabIndex = 4;
             // 
             // chkBoxAlwaysPublish
@@ -74,18 +74,18 @@
             this.chkBoxAlwaysPublish.Checked = true;
             this.chkBoxAlwaysPublish.CheckState = System.Windows.Forms.CheckState.Checked;
             this.chkBoxAlwaysPublish.Location = new System.Drawing.Point(4, 108);
-            this.chkBoxAlwaysPublish.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkBoxAlwaysPublish.Margin = new System.Windows.Forms.Padding(4);
             this.chkBoxAlwaysPublish.Name = "chkBoxAlwaysPublish";
-            this.chkBoxAlwaysPublish.Size = new System.Drawing.Size(123, 21);
+            this.chkBoxAlwaysPublish.Size = new System.Drawing.Size(282, 21);
             this.chkBoxAlwaysPublish.TabIndex = 7;
-            this.chkBoxAlwaysPublish.Text = "Always Publish";
+            this.chkBoxAlwaysPublish.Text = "Always Publish before doing any checks";
             this.chkBoxAlwaysPublish.UseVisualStyleBackColor = true;
             // 
             // ValidationSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(371, 265);
+            this.ClientSize = new System.Drawing.Size(467, 268);
             this.Controls.Add(this.chkBoxAlwaysPublish);
             this.Controls.Add(this.btnSaveSettings);
             this.Controls.Add(this.label1);
