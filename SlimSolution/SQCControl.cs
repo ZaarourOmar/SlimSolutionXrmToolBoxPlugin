@@ -8,10 +8,11 @@ using Microsoft.Xrm.Sdk;
 using McTools.Xrm.Connection;
 using System.Windows.Controls;
 using SlimSolution.Models;
+using XrmToolBox.Extensibility.Interfaces;
 
 namespace SlimSolution
 {
-    public partial class SQCControl : PluginControlBase
+    public partial class SQCControl : PluginControlBase, IGitHubPlugin
     {
 
         private Settings mySettings;
@@ -20,6 +21,10 @@ namespace SlimSolution
         IEnumerable<Entity> solutionEntities = new List<Entity>();
 
         public bool IsConnected { get; private set; }
+
+        public string RepositoryName => "SlimSolutionXrmToolBoxPlugin";
+
+        public string UserName => "ZaarourOmar";
 
         public SQCControl()
         {
