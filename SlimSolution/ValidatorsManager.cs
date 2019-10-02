@@ -10,31 +10,29 @@ using System.Threading.Tasks;
 
 namespace SlimSolution
 {
-    public class SlimSolutionManager
+    public class ValidatorsManager
     {
-
         public event EventHandler<ErrorEventArgs> OnError;
         public event EventHandler<ProgressEventArgs> OnProgressChanged;
-
         public IOrganizationService CRMService { get; internal set; }
         public ValidationResults Results { get; set; }
         public List<IValidator> Validators { get; set; }
         public Settings MySettings { get; set; }
 
         public CRMSolution Solution { get; set; }
-        public SlimSolutionManager(IOrganizationService service, CRMSolution solution, Settings mySettings)
+        public ValidatorsManager(IOrganizationService service, CRMSolution solution, Settings mySettings)
         {
             Solution = solution;
             CRMService = service;
             MySettings = mySettings;
             Results = new ValidationResults();
-            Validators = GetValidators();
+            Validators = GetAvailableValidators();
             
         }
 
         public ValidationResults Validate(CRMSolution solution)
         {
-            ValidationResults finalResults = new ValidationResults();
+            ValidationResults allValidatorsResult = new ValidationResults();
 
             if (Validators == null || Validators.Count == 0)
             {
@@ -46,7 +44,6 @@ namespace SlimSolution
             {
                 OnProgressChanged?.Invoke(this, new ProgressEventArgs("Publishing customizations"));
                 PublishAllXmlRequest publishRequest = new PublishAllXmlRequest();
-                
                 CRMService.Execute(publishRequest);
             }
 
@@ -63,14 +60,13 @@ namespace SlimSolution
                     OnProgressChanged?.Invoke(s, new ProgressEventArgs(e.Message));
                 };
 
-                List<CRMSolutionComponent> extraComponents = new List<CRMSolutionComponent>();
-                ValidationResults results = validator.Validate();
-                finalResults.AddResultSet(results);
+                ValidationResults validatorResult = validator.Validate();
+                allValidatorsResult.AddResultSet(validatorResult);
             }
 
-            return finalResults;
+            return allValidatorsResult;
         }
-        public List<IValidator> GetValidators()
+        public List<IValidator> GetAvailableValidators()
         {
             List<IValidator> validators = new List<IValidator>();
             if (MySettings.CheckComponents)
@@ -88,12 +84,4 @@ namespace SlimSolution
 
     }
 
-    public class PartialResultsEventArgs
-    {
-        public string Message { get; set; }
-        public PartialResultsEventArgs(string message)
-        {
-            this.Message = message;
-        }
-    }
 }

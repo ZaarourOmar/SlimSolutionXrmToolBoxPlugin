@@ -16,7 +16,7 @@ namespace SlimSolution
     {
 
         private Settings mySettings;
-        SlimSolutionManager slimSolutionManager;
+        ValidatorsManager slimSolutionManager;
         CRMSolution crmSolution;
         IEnumerable<Entity> solutionEntities = new List<Entity>();
 
@@ -179,7 +179,7 @@ namespace SlimSolution
             {
                 Entity solutionRecord = solutionEntities.FirstOrDefault(x => x.GetAttributeValue<string>("uniquename") == selectedSolutionItem.Name);
                 crmSolution = new CRMSolution(solutionRecord);
-                slimSolutionManager = new SlimSolutionManager(Service, crmSolution, mySettings);
+                slimSolutionManager = new ValidatorsManager(Service, crmSolution, mySettings);
                 ValidationResults finalResultsAndIssues = new ValidationResults();
                 gvResults.Rows.Clear();
                 WorkAsync(new WorkAsyncInfo
