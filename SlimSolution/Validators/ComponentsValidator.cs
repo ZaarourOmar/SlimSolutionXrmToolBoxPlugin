@@ -118,7 +118,7 @@ namespace SlimSolution.Validators
             foreach (var entityXml in entitiesXml)
             {
                 if (entityXml.Element("EntityInfo") != null && entityXml.Element("EntityInfo").Element("entity") != null)
-                    if (!entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value.Contains("_") && entityXml.Descendants("systemform") != null)
+                    if (entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName") != null && !entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value.Contains("_") && entityXml.Descendants("systemform") != null)
                         formCollections[entityXml.Descendants("EntitySetName").ElementAt(0).Value] = (from x in entityXml.Descendants("systemform") select x).ToList<XElement>();
             }
 
@@ -161,7 +161,7 @@ namespace SlimSolution.Validators
             foreach (var entityXml in entitiesXml)
             {
                 if (entityXml.Element("EntityInfo") != null && entityXml.Element("EntityInfo").Element("entity") != null)
-                    if (!entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value.Contains("_") && entityXml.Descendants("savedquery") != null)
+                    if (entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName") != null && !entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value.Contains("_") && entityXml.Descendants("savedquery") != null)
                         viewsCollections[entityXml.Descendants("EntitySetName").ElementAt(0).Value] = (from x in entityXml.Descendants("savedquery") select x).ToList<XElement>();
             }
 
@@ -206,7 +206,7 @@ namespace SlimSolution.Validators
             foreach (var entityXml in entitiesXml)
             {
                 if (entityXml.Element("EntityInfo") != null && entityXml.Element("EntityInfo").Element("entity") != null)
-                    if (!entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value.Contains("_") && entityXml.Descendants("attribute") != null)
+                    if (entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName") != null && !entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value.Contains("_") && entityXml.Descendants("attribute") != null)
                         attributesCollections[entityXml.Element("EntityInfo").Element("entity").Element("EntitySetName").Value] = (from x in entityXml.Descendants("attribute") select x).ToList<XElement>();
             }
 
